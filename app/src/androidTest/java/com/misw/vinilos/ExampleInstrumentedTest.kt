@@ -1,4 +1,4 @@
-package com.tsdc.vinilos
+package com.misw.vinilos
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.tsdc.vinilos", appContext.packageName)
+        assertEquals("com.misw.vinilos", appContext.packageName)
     }
 }
