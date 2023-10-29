@@ -108,7 +108,7 @@ fun VinilosTheme(
             // dark icons if we're in light theme
             systemUiController.setSystemBarsColor(
                 color = Color.Transparent,
-                darkIcons = useDarkIcons
+                darkIcons = false
             )
             onDispose {}
         }
