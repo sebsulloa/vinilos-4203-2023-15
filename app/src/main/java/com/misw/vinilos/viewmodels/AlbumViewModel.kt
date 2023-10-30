@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.repository.AlbumRepository
+import com.skydoves.sandwich.getOrElse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +23,7 @@ class AlbumsViewModel @Inject constructor(
 
     private fun fetchAlbums() {
         viewModelScope.launch {
-            val fetchedAlbums = repository.getAlbums()
-            albums.value = fetchedAlbums
+            albums.value = repository.getAlbums().getOrElse(emptyList())
         }
     }
 }
