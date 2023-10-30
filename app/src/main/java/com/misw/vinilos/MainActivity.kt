@@ -3,6 +3,7 @@ package com.misw.vinilos
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -27,9 +28,12 @@ import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
 import com.misw.vinilos.ui.screens.collectors.CollectorsListScreen
 import com.misw.vinilos.ui.theme.VinilosTheme
+import com.misw.vinilos.viewmodels.AlbumsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +41,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
+            val albumsViewModel: AlbumsViewModel by viewModels()
 
             VinilosTheme {
                 Scaffold(
@@ -78,7 +83,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     NavHost(navController, startDestination = Screen.Albums.route, Modifier.padding(innerPadding)) {
-                        composable(Screen.Albums.route) { AlbumsListScreen() }
+                        composable(Screen.Albums.route) { AlbumsListScreen(albumsViewModel) }
                         composable(Screen.Artists.route) { ArtistsListScreen() }
                         composable(Screen.Collectors.route) { CollectorsListScreen() }
                     }

@@ -1,11 +1,10 @@
 package com.misw.vinilos.data.repository
 
-import com.misw.vinilos.data.remote.network.RetrofitInstance
 import com.misw.vinilos.data.remote.services.AlbumService
+import javax.inject.Inject
 
-class AlbumRepository {
-
-    private val albumService: AlbumService = RetrofitInstance.retrofit.create(AlbumService::class.java)
-
+class AlbumRepository @Inject constructor(
+    private val albumService: AlbumService
+) {
     suspend fun getAlbums() = albumService.getAlbums()
 }

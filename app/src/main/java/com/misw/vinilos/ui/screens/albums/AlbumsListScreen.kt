@@ -12,42 +12,32 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.misw.vinilos.R
-
-data class Album(
-    val avatarResId: Int,
-    val headline: String,
-    val supportingText: String
-)
-
-val sampleAlbums = List(10) {
-    Album(
-        avatarResId = R.drawable.ic_launcher_foreground,
-        headline = "Album $it",
-        supportingText = "Genre $it",
-    )
-}
+import coil.compose.rememberAsyncImagePainter
+import com.misw.vinilos.data.remote.models.Album
+import com.misw.vinilos.viewmodels.AlbumsViewModel
 
 @Composable
-fun AlbumsListScreen() {
+fun AlbumsListScreen(viewModel: AlbumsViewModel) {
+    val albums = viewModel.albums.value
+
     LazyColumn {
-        items(sampleAlbums) { album ->
+        items(albums) { album ->
             AlbumListItem(album = album)
         }
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlbumListItem(album: Album) {
     ListItem(
-        headlineText = { Text(album.headline) },
-        supportingText = { Text(album.supportingText) },
+        headlineText = { Text(album.name) },
+        supportingText = { Text(album.genre) },
         leadingContent = {
             Image(
-                painter = painterResource(id = album.avatarResId),
+                painter = rememberAsyncImagePainter(model = album.cover),
                 contentDescription = null,
                 modifier = Modifier.size(40.dp)
             )
