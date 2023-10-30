@@ -20,29 +20,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.misw.vinilos.data.remote.models.Album
+import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.AlbumsViewModel
 
 @Composable
 fun AlbumsListScreen(viewModel: AlbumsViewModel) {
     val albums = viewModel.albums.value
     val isLoading = viewModel.isLoading.value
+    val hasError = viewModel.hasError.value
 
-    if (isLoading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
+    when {
+        isLoading -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    } else {
-        LazyColumn {
-            items(albums) { album ->
-                AlbumListItem(album = album)
+        hasError -> {
+            ErrorMessage(
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        else -> {
+            LazyColumn {
+                items(albums) { album ->
+                    AlbumListItem(album = album)
+                }
             }
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
