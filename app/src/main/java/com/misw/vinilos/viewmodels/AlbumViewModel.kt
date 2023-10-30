@@ -16,6 +16,8 @@ class AlbumsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val albums = mutableStateOf<List<Album>>(emptyList())
+    val isLoading = mutableStateOf(false)
+
 
     init {
         fetchAlbums()
@@ -23,7 +25,9 @@ class AlbumsViewModel @Inject constructor(
 
     private fun fetchAlbums() {
         viewModelScope.launch {
+            isLoading.value = true
             albums.value = repository.getAlbums().getOrElse(emptyList())
+            isLoading.value = false
         }
     }
 }
