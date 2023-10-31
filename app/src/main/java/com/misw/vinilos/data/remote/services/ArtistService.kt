@@ -5,6 +5,6 @@ import com.skydoves.sandwich.ApiResponse
 import retrofit2.http.GET
 
 interface ArtistService {
-    @GET("/artists")
+    @GET("/musicians")
     suspend fun getArtists(): ApiResponse<List<Artist>>
 }
