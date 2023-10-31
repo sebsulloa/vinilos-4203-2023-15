@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.misw.vinilos.navigation.Screen
+import com.misw.vinilos.navigation.title
 import com.misw.vinilos.ui.components.BottomNavigationItem
 import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
@@ -47,7 +48,16 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Vinilos") },
+                            title = {
+                                Text(currentDestination?.route?.let { route ->
+                                    when(route) {
+                                        Screen.Albums.route -> Screen.Albums.title()
+                                        Screen.Artists.route -> Screen.Artists.title()
+                                        Screen.Collectors.route -> Screen.Collectors.title()
+                                        else -> Screen.Albums.title()
+                                    }
+                                } ?: Screen.Albums.title())
+                            },
                             colors = TopAppBarDefaults.smallTopAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 titleContentColor = Color.White,
