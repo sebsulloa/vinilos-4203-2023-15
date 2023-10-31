@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Vinilos</string>
+    <string name="tab_albums">Albums</string>
+    <string name="tab_artists">Artists</string>
+    <string name="tab_collectors">Collectors</string>
+    <string name="loading_failed">Failed to load</string>
+</resources>
