@@ -29,6 +29,7 @@ import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
 import com.misw.vinilos.ui.screens.collectors.CollectorsListScreen
 import com.misw.vinilos.ui.theme.VinilosTheme
 import com.misw.vinilos.viewmodels.AlbumsViewModel
+import com.misw.vinilos.viewmodels.ArtistsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
             val albumsViewModel: AlbumsViewModel by viewModels()
+            val artistsViewModel: ArtistsViewModel by viewModels()
 
             VinilosTheme {
                 Scaffold(
@@ -84,7 +86,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(navController, startDestination = Screen.Albums.route, Modifier.padding(innerPadding)) {
                         composable(Screen.Albums.route) { AlbumsListScreen(albumsViewModel) }
-                        composable(Screen.Artists.route) { ArtistsListScreen() }
+                        composable(Screen.Artists.route) { ArtistsListScreen(artistsViewModel) }
                         composable(Screen.Collectors.route) { CollectorsListScreen() }
                     }
                 }
