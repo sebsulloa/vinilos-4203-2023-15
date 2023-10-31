@@ -24,7 +24,7 @@ import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.ArtistsViewModel
 
 @Composable
-fun ArtistListScreen(viewModel: ArtistsViewModel) {
+fun ArtistsListScreen(viewModel: ArtistsViewModel) {
     val artists = viewModel.artists.value
     val isLoading = viewModel.isLoading.value
     val hasError = viewModel.hasError.value
