@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.misw.vinilos.data.remote.models.Artist
@@ -36,12 +37,12 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(modifier = Modifier.testTag("Loading"))
             }
         }
         hasError -> {
             ErrorMessage(
-                modifier = Modifier.fillMaxSize()
+                modifier = (Modifier.fillMaxSize().testTag("errorMessage"))
             )
         }
         else -> {
