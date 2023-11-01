@@ -36,4 +36,22 @@ class AlbumsListScreenTest {
         // Then
         composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
     }
+
+    @Test
+    fun testErrorState() {
+        // Given
+        val mockViewModel = mockk<AlbumsViewModel>(relaxed = true)
+
+        // When
+        every { mockViewModel.albums } returns mutableStateOf(listOf())
+        every { mockViewModel.isLoading } returns mutableStateOf(false)
+        every { mockViewModel.hasError } returns mutableStateOf(true)
+
+        composeTestRule.setContent {
+            AlbumsListScreen(viewModel = mockViewModel)
+        }
+
+        // Then
+        composeTestRule.onNodeWithTag("errorMessage").assertIsDisplayed()
+    }
 }
