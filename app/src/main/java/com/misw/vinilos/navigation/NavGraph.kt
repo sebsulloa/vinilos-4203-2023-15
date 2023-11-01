@@ -5,7 +5,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import com.misw.vinilos.R
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
@@ -15,8 +17,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
 }
 
 
-val items = listOf(
-    Screen.Albums,
-    Screen.Artists,
-    Screen.Collectors,
-)
+@Composable
+fun Screen.title(): String {
+    return stringResource(this.resourceId)
+}
