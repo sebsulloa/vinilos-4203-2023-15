@@ -46,7 +46,7 @@ fun AlbumsListScreen(viewModel: AlbumsViewModel) {
             )
         }
         else -> {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.testTag("albumList")) {
                 items(albums) { album ->
                     AlbumListItem(album = album)
                 }
