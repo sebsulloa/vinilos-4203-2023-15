@@ -87,6 +87,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48.1")
     kapt("com.google.dagger:hilt-compiler:2.48.1")
     implementation("com.github.skydoves:sandwich:1.3.9")
+    implementation("io.github.serpro69:kotlin-faker:1.15.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
