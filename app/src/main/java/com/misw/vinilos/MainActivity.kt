@@ -17,12 +17,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.misw.vinilos.navigation.Screen
+import com.misw.vinilos.navigation.title
 import com.misw.vinilos.ui.components.BottomNavigationItem
 import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
@@ -49,7 +51,18 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Vinilos") },
+
+                            title = {
+                                Text(modifier = Modifier.testTag("topAppBarTitle"),
+                                    text = currentDestination?.route?.let { route ->
+                                        when (route) {
+                                            Screen.Albums.route -> Screen.Albums.title()
+                                            Screen.Artists.route -> Screen.Artists.title()
+                                            Screen.Collectors.route -> Screen.Collectors.title()
+                                            else -> Screen.Albums.title()
+                                        }
+                                    } ?: Screen.Albums.title())
+                            },
                             colors = TopAppBarDefaults.smallTopAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 titleContentColor = Color.White,
@@ -58,33 +71,39 @@ class MainActivity : ComponentActivity() {
                     },
                     bottomBar = {
                         NavigationBar {
-                            BottomNavigationItem().bottomNavigationItems().forEachIndexed { _, navigationItem ->
-                                NavigationBarItem(
-                                    selected = navigationItem.route == currentDestination?.route,
-                                    label = {
-                                        Text(navigationItem.label)
-                                    },
-                                    icon = {
-                                        Icon(
-                                            navigationItem.icon,
-                                            contentDescription = navigationItem.label
-                                        )
-                                    },
-                                    onClick = {
-                                        navController.navigate(navigationItem.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
+                            BottomNavigationItem().bottomNavigationItems()
+                                .forEachIndexed { _, navigationItem ->
+                                    NavigationBarItem(
+                                        modifier = Modifier.testTag("${navigationItem.label}NavItem"),
+                                        selected = navigationItem.route == currentDestination?.route,
+                                        label = {
+                                            Text(navigationItem.label)
+                                        },
+                                        icon = {
+                                            Icon(
+                                                navigationItem.icon,
+                                                contentDescription = navigationItem.label
+                                            )
+                                        },
+                                        onClick = {
+                                            navController.navigate(navigationItem.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
                                         }
-                                    }
-                                )
-                            }
+                                    )
+                                }
                         }
                     }
                 ) { innerPadding ->
-                    NavHost(navController, startDestination = Screen.Albums.route, Modifier.padding(innerPadding)) {
+                    NavHost(
+                        navController,
+                        startDestination = Screen.Albums.route,
+                        Modifier.padding(innerPadding)
+                    ) {
                         composable(Screen.Albums.route) { AlbumsListScreen(albumsViewModel) }
                         composable(Screen.Artists.route) { ArtistsListScreen(artistsViewModel) }
                         composable(Screen.Collectors.route) { CollectorsListScreen() }
