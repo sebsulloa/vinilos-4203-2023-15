@@ -46,7 +46,7 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
             )
         }
         else -> {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.testTag("artistList")){
                 items(artists) { artist ->
                     ArtistListItem(artist = artist)
                 }
@@ -54,8 +54,6 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

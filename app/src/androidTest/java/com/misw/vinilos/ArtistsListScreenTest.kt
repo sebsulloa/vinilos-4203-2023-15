@@ -36,4 +36,41 @@ class ArtistsListScreenTest {
         // Then
         composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
     }
+
+    @Test
+    fun testErrorState() {
+        // Given
+        val mockViewModel = mockk<ArtistsViewModel>(relaxed = true)
+
+        // When
+        every { mockViewModel.artists } returns mutableStateOf(listOf())
+        every { mockViewModel.isLoading } returns mutableStateOf(false)
+        every { mockViewModel.hasError } returns mutableStateOf(true)
+
+        composeTestRule.setContent {
+            ArtistsListScreen(viewModel = mockViewModel)
+        }
+
+        // Then
+        composeTestRule.onNodeWithTag("errorMessage").assertIsDisplayed()
+    }
+
+    @Test
+    fun testArtistListState() {
+        // Given
+        val mockViewModel = mockk<ArtistsViewModel>(relaxed = true)
+        val artists = (1..5).map {DataFactory.createArtist()}
+
+        // When
+        every { mockViewModel.artists } returns mutableStateOf(artists)
+        every { mockViewModel.isLoading } returns mutableStateOf(false)
+        every { mockViewModel.hasError } returns mutableStateOf(false)
+
+        composeTestRule.setContent {
+            ArtistsListScreen(viewModel = mockViewModel)
+        }
+
+        // Then
+        composeTestRule.onNodeWithTag("artistList").assertIsDisplayed()
+    }
 }
