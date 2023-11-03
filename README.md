@@ -6,7 +6,7 @@ Bienvenido a **Vinilos**, una aplicación Android para los amantes de la música
 
 Antes de comenzar, asegúrate de seguir estos pasos para ejecutar la aplicación:
 
-1. **Descargar la APK:** La aplicación Vinilos se encuentra disponible en formato APK en este mismo repositorio. Puedes descargarlo [aquí](vinilos.apk).
+1. **Descargar la APK:** La aplicación Vinilos se encuentra disponible en formato APK en este mismo repositorio. Puedes descargarlo [aquí](https://github.com/sebsulloa/vinilos-4203-2023-15/blob/main/app/release/app-release.apk).
 
 2. **Acceder al Sitio Web:** Vinilos utiliza un servicio de backend que está alojado en [https://backend-misw4203.onrender.com](https://backend-misw4203.onrender.com). Debido a que Render está siendo utilizado bajo la capa gratuita, puede que necesites esperar a que el servicio se encuentre activo y en funcionamiento.
 
