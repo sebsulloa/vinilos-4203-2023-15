@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.misw.vinilos.ui.components.MaskedDateInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +28,9 @@ fun AlbumCreateScreen() {
     var albumCover by remember { mutableStateOf("") }
     var nameError by remember { mutableStateOf(false) }
     var coverError by remember { mutableStateOf(false) }
+
+    var albumReleaseDate by remember { mutableStateOf("") }
+    var releaseDateError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -38,7 +42,7 @@ fun AlbumCreateScreen() {
             value = albumName,
             onValueChange = {
                 albumName = it
-                nameError = it.isBlank() // Validates the album name
+                nameError = it.isBlank()
             },
             label = { Text("Album Name") },
             isError = nameError,
@@ -70,12 +74,31 @@ fun AlbumCreateScreen() {
                 }
             }
         )
+
+        MaskedDateInput(
+            date = albumReleaseDate,
+            onDateChange = { it ->
+                albumReleaseDate = it
+                releaseDateError = it.isBlank()
+            },
+            isError = releaseDateError,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            supportingText = {
+                if (releaseDateError) {
+                    Text("Album release date cannot be empty", color = MaterialTheme.colorScheme.error)
+                }
+            }
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 nameError = albumName.isBlank()
                 coverError = albumCover.isBlank()
-                if (!nameError && !coverError) {
+                releaseDateError = albumReleaseDate.isBlank()
+                if (!nameError && !coverError && !releaseDateError) {
                     // TODO: Handle album creation logic with albumName and albumCover
                 }
             },
