@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.misw.vinilos.ui.components.DropdownSelector
 import com.misw.vinilos.ui.components.MaskedDateInput
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +36,9 @@ fun AlbumCreateScreen() {
 
     var albumDescription by remember { mutableStateOf("") }
     var descriptionError by remember { mutableStateOf(false) }
+
+    var selectedGenre by remember { mutableStateOf("") }
+    var genreError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -114,6 +118,21 @@ fun AlbumCreateScreen() {
             }
         )
 
+        DropdownSelector(
+            options = listOf("CLASSICAL", "SALSA", "ROCK", "FOLK"),
+            selectedOption = selectedGenre,
+            onOptionSelected = { genre ->
+                selectedGenre = genre
+            },
+            label = "Genre",
+            supportingText = {
+                if (genreError) {
+                    Text("Genre cannot be empty", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            isError = genreError
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
@@ -121,8 +140,9 @@ fun AlbumCreateScreen() {
                 coverError = albumCover.isBlank()
                 releaseDateError = albumReleaseDate.isBlank()
                 descriptionError = albumDescription.isBlank()
+                genreError = selectedGenre.isBlank()
 
-                if (!nameError && !coverError && !releaseDateError && !descriptionError) {
+                if (!nameError && !coverError && !releaseDateError && !descriptionError && !genreError) {
                     // Handle album creation logic with the new description field
                     // TODO: Add logic here
                 }
