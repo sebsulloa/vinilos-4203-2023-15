@@ -26,11 +26,15 @@ import com.misw.vinilos.ui.components.MaskedDateInput
 fun AlbumCreateScreen() {
     var albumName by remember { mutableStateOf("") }
     var albumCover by remember { mutableStateOf("") }
+
     var nameError by remember { mutableStateOf(false) }
     var coverError by remember { mutableStateOf(false) }
 
     var albumReleaseDate by remember { mutableStateOf("") }
     var releaseDateError by remember { mutableStateOf(false) }
+
+    var albumDescription by remember { mutableStateOf("") }
+    var descriptionError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -92,14 +96,35 @@ fun AlbumCreateScreen() {
             }
         )
 
+        OutlinedTextField(
+            value = albumDescription,
+            onValueChange = {
+                albumDescription = it
+                descriptionError = it.isBlank() // Validates that the description is not empty
+            },
+            label = { Text("Album Description") },
+            isError = descriptionError,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            supportingText = {
+                if (descriptionError) {
+                    Text("Description cannot be empty", color = MaterialTheme.colorScheme.error)
+                }
+            }
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 nameError = albumName.isBlank()
                 coverError = albumCover.isBlank()
                 releaseDateError = albumReleaseDate.isBlank()
-                if (!nameError && !coverError && !releaseDateError) {
-                    // TODO: Handle album creation logic with albumName and albumCover
+                descriptionError = albumDescription.isBlank()
+
+                if (!nameError && !coverError && !releaseDateError && !descriptionError) {
+                    // Handle album creation logic with the new description field
+                    // TODO: Add logic here
                 }
             },
             modifier = Modifier
