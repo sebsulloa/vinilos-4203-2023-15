@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -41,6 +44,8 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
 
     val selectedRecord = viewModel.selectedRecord.value
     val recordError = viewModel.recordError.value
+
+    val isLoading = viewModel.isLoading.value
 
     Column(
         modifier = Modifier
@@ -158,9 +163,20 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
             onClick = { viewModel.createAlbum() },
             modifier = Modifier
                 .padding(8.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            enabled = !viewModel.isLoading.value,
+            colors = ButtonDefaults.buttonColors(
+                disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+            )
         ) {
-            Text("Create Album")
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text("Create Album")
+            }
         }
     }
 }
