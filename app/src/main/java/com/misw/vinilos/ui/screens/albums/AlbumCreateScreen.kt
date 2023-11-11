@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -40,10 +42,14 @@ fun AlbumCreateScreen() {
     var selectedGenre by remember { mutableStateOf("") }
     var genreError by remember { mutableStateOf(false) }
 
+    var selectedRecord by remember { mutableStateOf("") }
+    var recordError by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
@@ -133,6 +139,21 @@ fun AlbumCreateScreen() {
             isError = genreError
         )
 
+        DropdownSelector(
+            options = listOf("Sony Music", "EMI", "Discos Fuentes", "Elektra", "Fania Records"),
+            selectedOption = selectedRecord,
+            onOptionSelected = { record ->
+                selectedRecord = record
+            },
+            label = "Record",
+            supportingText = {
+                if (recordError) {
+                    Text("Record cannot be empty", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            isError = recordError
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
@@ -141,8 +162,9 @@ fun AlbumCreateScreen() {
                 releaseDateError = albumReleaseDate.isBlank()
                 descriptionError = albumDescription.isBlank()
                 genreError = selectedGenre.isBlank()
+                recordError = selectedRecord.isBlank()
 
-                if (!nameError && !coverError && !releaseDateError && !descriptionError && !genreError) {
+                if (!nameError && !coverError && !releaseDateError && !descriptionError && !genreError && !recordError) {
                     // Handle album creation logic with the new description field
                     // TODO: Add logic here
                 }
