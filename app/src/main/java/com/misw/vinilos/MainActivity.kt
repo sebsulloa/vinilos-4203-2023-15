@@ -139,7 +139,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController,
-                        startDestination = Screen.Albums.route,
+                        startDestination = Screen.CreateAlbum.route,
                         Modifier.padding(innerPadding)
                     ) {
                         composable(Screen.Albums.route) { AlbumsListScreen(albumsViewModel) }
