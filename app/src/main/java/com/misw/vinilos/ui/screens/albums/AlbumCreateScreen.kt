@@ -14,36 +14,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.misw.vinilos.ui.components.DropdownSelector
 import com.misw.vinilos.ui.components.MaskedDateInput
+import com.misw.vinilos.viewmodels.AlbumCreateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlbumCreateScreen() {
-    var albumName by remember { mutableStateOf("") }
-    var albumCover by remember { mutableStateOf("") }
+fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
+    val albumName = viewModel.albumName.value
+    val nameError = viewModel.nameError.value
 
-    var nameError by remember { mutableStateOf(false) }
-    var coverError by remember { mutableStateOf(false) }
+    val albumCover = viewModel.albumCover.value
+    val coverError = viewModel.coverError.value
 
-    var albumReleaseDate by remember { mutableStateOf("") }
-    var releaseDateError by remember { mutableStateOf(false) }
+    val albumReleaseDate = viewModel.albumReleaseDate.value
+    val releaseDateError = viewModel.releaseDateError.value
 
-    var albumDescription by remember { mutableStateOf("") }
-    var descriptionError by remember { mutableStateOf(false) }
+    val albumDescription = viewModel.albumDescription.value
+    val descriptionError = viewModel.descriptionError.value
 
-    var selectedGenre by remember { mutableStateOf("") }
-    var genreError by remember { mutableStateOf(false) }
+    val selectedGenre = viewModel.selectedGenre.value
+    val genreError = viewModel.genreError.value
 
-    var selectedRecord by remember { mutableStateOf("") }
-    var recordError by remember { mutableStateOf(false) }
+    val selectedRecord = viewModel.selectedRecord.value
+    val recordError = viewModel.recordError.value
 
     Column(
         modifier = Modifier
@@ -55,8 +52,8 @@ fun AlbumCreateScreen() {
         OutlinedTextField(
             value = albumName,
             onValueChange = {
-                albumName = it
-                nameError = it.isBlank()
+                viewModel.albumName.value = it
+                viewModel.nameError.value = it.isEmpty()
             },
             label = { Text("Album Name") },
             isError = nameError,
@@ -73,8 +70,8 @@ fun AlbumCreateScreen() {
         OutlinedTextField(
             value = albumCover,
             onValueChange = {
-                albumCover = it
-                coverError = it.isBlank() // Validates the album cover URL
+                viewModel.albumCover.value = it
+                viewModel.coverError.value = it.isEmpty()
             },
             label = { Text("Album Cover URL") },
             isError = coverError,
@@ -92,8 +89,8 @@ fun AlbumCreateScreen() {
         MaskedDateInput(
             date = albumReleaseDate,
             onDateChange = { it ->
-                albumReleaseDate = it
-                releaseDateError = it.isBlank()
+                viewModel.albumReleaseDate.value = it
+                viewModel.releaseDateError.value = it.isEmpty()
             },
             isError = releaseDateError,
             modifier = Modifier
@@ -109,8 +106,8 @@ fun AlbumCreateScreen() {
         OutlinedTextField(
             value = albumDescription,
             onValueChange = {
-                albumDescription = it
-                descriptionError = it.isBlank() // Validates that the description is not empty
+                viewModel.albumDescription.value = it
+                viewModel.descriptionError.value = it.isEmpty()
             },
             label = { Text("Album Description") },
             isError = descriptionError,
@@ -125,10 +122,11 @@ fun AlbumCreateScreen() {
         )
 
         DropdownSelector(
-            options = listOf("CLASSICAL", "SALSA", "ROCK", "FOLK"),
+            options = listOf("Classical", "Salsa", "Rock", "Folk"),
             selectedOption = selectedGenre,
             onOptionSelected = { genre ->
-                selectedGenre = genre
+                viewModel.selectedGenre.value = genre
+                viewModel.genreError.value = genre.isEmpty()
             },
             label = "Genre",
             supportingText = {
@@ -143,7 +141,8 @@ fun AlbumCreateScreen() {
             options = listOf("Sony Music", "EMI", "Discos Fuentes", "Elektra", "Fania Records"),
             selectedOption = selectedRecord,
             onOptionSelected = { record ->
-                selectedRecord = record
+                viewModel.selectedRecord.value = record
+                viewModel.recordError.value = record.isEmpty()
             },
             label = "Record",
             supportingText = {
@@ -156,19 +155,7 @@ fun AlbumCreateScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = {
-                nameError = albumName.isBlank()
-                coverError = albumCover.isBlank()
-                releaseDateError = albumReleaseDate.isBlank()
-                descriptionError = albumDescription.isBlank()
-                genreError = selectedGenre.isBlank()
-                recordError = selectedRecord.isBlank()
-
-                if (!nameError && !coverError && !releaseDateError && !descriptionError && !genreError && !recordError) {
-                    // Handle album creation logic with the new description field
-                    // TODO: Add logic here
-                }
-            },
+            onClick = { viewModel.createAlbum() },
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth()
