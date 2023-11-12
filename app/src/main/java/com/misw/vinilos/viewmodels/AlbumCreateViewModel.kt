@@ -7,6 +7,7 @@ import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.AlbumCreateRequest
 import com.misw.vinilos.data.remote.models.ErrorResponse
 import com.misw.vinilos.data.repository.AlbumRepository
+import com.misw.vinilos.utils.convertDateFormatForBackend
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
 import com.skydoves.sandwich.retrofit.serialization.onErrorDeserialize
@@ -20,12 +21,13 @@ class AlbumCreateViewModel @Inject constructor(
 ) : ViewModel() {
 
     // State variables for inputs
-    var albumName = mutableStateOf("")
-    var albumCover = mutableStateOf("")
+    var albumName = mutableStateOf("Justice for all")
+    var albumCover = mutableStateOf("https://en.wikipedia.org/wiki/...And_Justice_for_All_%28album%29#/media/File:Metallica_-_...And_Justice_for_All_cover.jpg")
     var albumReleaseDate = mutableStateOf("")
-    var albumDescription = mutableStateOf("")
-    var selectedGenre = mutableStateOf("")
-    var selectedRecord = mutableStateOf("")
+    var albumReleaseDateMillis = mutableStateOf(0L)
+    var albumDescription = mutableStateOf("Metallica")
+    var selectedGenre = mutableStateOf("Rock")
+    var selectedRecord = mutableStateOf("Sony Music")
 
     // Error states for each input
     var nameError = mutableStateOf(false)
@@ -44,10 +46,11 @@ class AlbumCreateViewModel @Inject constructor(
         if (validateInputs()) {
             viewModelScope.launch {
                 isLoading.value = true
+
                 val albumCreateRequest = AlbumCreateRequest(
                     name = albumName.value,
                     cover = albumCover.value,
-                    releaseDate = albumReleaseDate.value,
+                    releaseDate = convertDateFormatForBackend(albumReleaseDateMillis.value),
                     description = albumDescription.value,
                     genre = selectedGenre.value,
                     recordLabel = selectedRecord.value
@@ -68,7 +71,6 @@ class AlbumCreateViewModel @Inject constructor(
                 isLoading.value = false
             }
         }
-
     }
 
     fun clearInputs() {
@@ -91,7 +93,7 @@ class AlbumCreateViewModel @Inject constructor(
     private fun validateInputs(): Boolean {
         nameError.value = albumName.value.isBlank()
         coverError.value = albumCover.value.isBlank()
-        releaseDateError.value = albumReleaseDate.value.isBlank()
+        releaseDateError.value = albumReleaseDate.value.isBlank() || albumReleaseDateMillis.value== 0L
         descriptionError.value = albumDescription.value.isBlank()
         genreError.value = selectedGenre.value.isBlank()
         recordError.value = selectedRecord.value.isBlank()
