@@ -1,5 +1,6 @@
 package com.misw.vinilos.viewmodels
 
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,13 +22,13 @@ class AlbumCreateViewModel @Inject constructor(
 ) : ViewModel() {
 
     // State variables for inputs
-    var albumName = mutableStateOf("Justice for all")
-    var albumCover = mutableStateOf("https://en.wikipedia.org/wiki/...And_Justice_for_All_%28album%29#/media/File:Metallica_-_...And_Justice_for_All_cover.jpg")
+    var albumName = mutableStateOf("")
+    var albumCover = mutableStateOf("")
     var albumReleaseDate = mutableStateOf("")
-    var albumReleaseDateMillis = mutableStateOf(0L)
-    var albumDescription = mutableStateOf("Metallica")
-    var selectedGenre = mutableStateOf("Rock")
-    var selectedRecord = mutableStateOf("Sony Music")
+    var albumReleaseDateMillis = mutableLongStateOf(0L)
+    var albumDescription = mutableStateOf("")
+    var selectedGenre = mutableStateOf("")
+    var selectedRecord = mutableStateOf("")
 
     // Error states for each input
     var nameError = mutableStateOf(false)
@@ -50,7 +51,7 @@ class AlbumCreateViewModel @Inject constructor(
                 val albumCreateRequest = AlbumCreateRequest(
                     name = albumName.value,
                     cover = albumCover.value,
-                    releaseDate = convertDateFormatForBackend(albumReleaseDateMillis.value),
+                    releaseDate = convertDateFormatForBackend(albumReleaseDateMillis.longValue),
                     description = albumDescription.value,
                     genre = selectedGenre.value,
                     recordLabel = selectedRecord.value
@@ -93,7 +94,7 @@ class AlbumCreateViewModel @Inject constructor(
     private fun validateInputs(): Boolean {
         nameError.value = albumName.value.isBlank()
         coverError.value = albumCover.value.isBlank()
-        releaseDateError.value = albumReleaseDate.value.isBlank() || albumReleaseDateMillis.value== 0L
+        releaseDateError.value = albumReleaseDate.value.isBlank() || albumReleaseDateMillis.longValue== 0L
         descriptionError.value = albumDescription.value.isBlank()
         genreError.value = selectedGenre.value.isBlank()
         recordError.value = selectedRecord.value.isBlank()
