@@ -3,8 +3,13 @@ package com.misw.vinilos.viewmodels
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.AlbumCreateRequest
+import com.misw.vinilos.data.remote.models.ErrorResponse
 import com.misw.vinilos.data.repository.AlbumRepository
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onSuccess
+import com.skydoves.sandwich.retrofit.serialization.onErrorDeserialize
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,12 +20,12 @@ class AlbumCreateViewModel @Inject constructor(
 ) : ViewModel() {
 
     // State variables for inputs
-    var albumName = mutableStateOf("Name test")
-    var albumCover = mutableStateOf("https://m.media-amazon.com/images/I/716FcW7qgSL._UF1000,1000_QL80_.jpg")
-    var albumReleaseDate = mutableStateOf("1111/11/11")
-    var albumDescription = mutableStateOf("Description test")
-    var selectedGenre = mutableStateOf("Classical")
-    var selectedRecord = mutableStateOf("Sony Music")
+    var albumName = mutableStateOf("")
+    var albumCover = mutableStateOf("")
+    var albumReleaseDate = mutableStateOf("")
+    var albumDescription = mutableStateOf("")
+    var selectedGenre = mutableStateOf("")
+    var selectedRecord = mutableStateOf("")
 
     // Error states for each input
     var nameError = mutableStateOf(false)
@@ -32,30 +37,55 @@ class AlbumCreateViewModel @Inject constructor(
 
     // Loading and Error States
     var isLoading = mutableStateOf(false)
-    var hasError = mutableStateOf(false)
+    var successMessage = mutableStateOf("")
+    var errorMessage = mutableStateOf("")
 
     fun createAlbum() {
         if (validateInputs()) {
             viewModelScope.launch {
-                try {
-                    isLoading.value = true
-                    val albumCreateRequest = AlbumCreateRequest(
-                        name = albumName.value,
-                        cover = albumCover.value,
-                        releaseDate = albumReleaseDate.value,
-                        description = albumDescription.value,
-                        genre = selectedGenre.value,
-                        recordLabel = selectedRecord.value
-                    )
-                    repository.createAlbum(albumCreateRequest)
-                    hasError.value = false
-                } catch (e: Exception) {
-                    hasError.value = true
-                } finally {
-                    isLoading.value = false
-                }
+                isLoading.value = true
+                val albumCreateRequest = AlbumCreateRequest(
+                    name = albumName.value,
+                    cover = albumCover.value,
+                    releaseDate = albumReleaseDate.value,
+                    description = albumDescription.value,
+                    genre = selectedGenre.value,
+                    recordLabel = selectedRecord.value
+                )
+
+                repository.createAlbum(albumCreateRequest)
+                    .onSuccess {
+                        successMessage.value = "Album created successfully"
+                        clearInputs()
+                    }
+                    .onErrorDeserialize<Album, ErrorResponse> { errorResponse ->
+                        errorMessage.value = "Error creating album: ${errorResponse.message}"
+                    }
+                    .onException {
+                        errorMessage.value = "Exception occurred: $message"
+                    }
+
+                isLoading.value = false
             }
         }
+
+    }
+
+    fun clearInputs() {
+        albumName.value = ""
+        albumCover.value = ""
+        albumReleaseDate.value = ""
+        albumDescription.value = ""
+        selectedGenre.value = ""
+        selectedRecord.value = ""
+
+        // Reset error states
+        nameError.value = false
+        coverError.value = false
+        releaseDateError.value = false
+        descriptionError.value = false
+        genreError.value = false
+        recordError.value = false
     }
 
     private fun validateInputs(): Boolean {
