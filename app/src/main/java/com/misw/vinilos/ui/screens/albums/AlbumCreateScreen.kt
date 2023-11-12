@@ -1,5 +1,6 @@
 package com.misw.vinilos.ui.screens.albums
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +13,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -42,125 +48,157 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
     val selectedRecord = viewModel.selectedRecord.value
     val recordError = viewModel.recordError.value
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        OutlinedTextField(
-            value = albumName,
-            onValueChange = {
-                viewModel.albumName.value = it
-                viewModel.nameError.value = it.isEmpty()
-            },
-            label = { Text("Album Name") },
-            isError = nameError,
-            singleLine = true,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            supportingText = {
-                if (nameError) {
-                    Text("Album name cannot be empty", color = MaterialTheme.colorScheme.error)
-                }
-            }
-        )
-        OutlinedTextField(
-            value = albumCover,
-            onValueChange = {
-                viewModel.albumCover.value = it
-                viewModel.coverError.value = it.isEmpty()
-            },
-            label = { Text("Album Cover URL") },
-            isError = coverError,
-            singleLine = true,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            supportingText = {
-                if (coverError) {
-                    Text("Album cover URL cannot be empty", color = MaterialTheme.colorScheme.error)
-                }
-            }
-        )
+    val snackbarHostState = remember { SnackbarHostState() }
 
-        MaskedDateInput(
-            date = albumReleaseDate,
-            onDateChange = { it ->
-                viewModel.albumReleaseDate.value = it
-                viewModel.releaseDateError.value = it.isEmpty()
-            },
-            isError = releaseDateError,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            supportingText = {
-                if (releaseDateError) {
-                    Text("Album release date cannot be empty", color = MaterialTheme.colorScheme.error)
-                }
-            }
-        )
-
-        OutlinedTextField(
-            value = albumDescription,
-            onValueChange = {
-                viewModel.albumDescription.value = it
-                viewModel.descriptionError.value = it.isEmpty()
-            },
-            label = { Text("Album Description") },
-            isError = descriptionError,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            supportingText = {
-                if (descriptionError) {
-                    Text("Description cannot be empty", color = MaterialTheme.colorScheme.error)
-                }
-            }
-        )
-
-        DropdownSelector(
-            options = listOf("Classical", "Salsa", "Rock", "Folk"),
-            selectedOption = selectedGenre,
-            onOptionSelected = { genre ->
-                viewModel.selectedGenre.value = genre
-                viewModel.genreError.value = genre.isEmpty()
-            },
-            label = "Genre",
-            supportingText = {
-                if (genreError) {
-                    Text("Genre cannot be empty", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            isError = genreError
-        )
-
-        DropdownSelector(
-            options = listOf("Sony Music", "EMI", "Discos Fuentes", "Elektra", "Fania Records"),
-            selectedOption = selectedRecord,
-            onOptionSelected = { record ->
-                viewModel.selectedRecord.value = record
-                viewModel.recordError.value = record.isEmpty()
-            },
-            label = "Record",
-            supportingText = {
-                if (recordError) {
-                    Text("Record cannot be empty", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            isError = recordError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { viewModel.createAlbum() },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            Text("Create Album")
+    LaunchedEffect(key1 = viewModel.successMessage.value) {
+        if (viewModel.successMessage.value.isNotEmpty()) {
+            snackbarHostState.showSnackbar(
+                message = viewModel.successMessage.value,
+                duration = SnackbarDuration.Short
+            )
+            viewModel.successMessage.value = ""
         }
+    }
+
+    LaunchedEffect(key1 = viewModel.errorMessage.value) {
+        if (viewModel.errorMessage.value.isNotEmpty()) {
+            snackbarHostState.showSnackbar(
+                message = viewModel.errorMessage.value,
+                duration = SnackbarDuration.Short
+            )
+            viewModel.errorMessage.value = ""
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            OutlinedTextField(
+                value = albumName,
+                onValueChange = {
+                    viewModel.albumName.value = it
+                    viewModel.nameError.value = it.isEmpty()
+                },
+                label = { Text("Album Name") },
+                isError = nameError,
+                singleLine = true,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                supportingText = {
+                    if (nameError) {
+                        Text("Album name cannot be empty", color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            )
+            OutlinedTextField(
+                value = albumCover,
+                onValueChange = {
+                    viewModel.albumCover.value = it
+                    viewModel.coverError.value = it.isEmpty()
+                },
+                label = { Text("Album Cover URL") },
+                isError = coverError,
+                singleLine = true,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                supportingText = {
+                    if (coverError) {
+                        Text(
+                            "Album cover URL cannot be empty",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            )
+
+            MaskedDateInput(
+                date = albumReleaseDate,
+                onDateChange = { it ->
+                    viewModel.albumReleaseDate.value = it
+                    viewModel.releaseDateError.value = it.isEmpty()
+                },
+                isError = releaseDateError,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                supportingText = {
+                    if (releaseDateError) {
+                        Text(
+                            "Album release date cannot be empty",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            )
+
+            OutlinedTextField(
+                value = albumDescription,
+                onValueChange = {
+                    viewModel.albumDescription.value = it
+                    viewModel.descriptionError.value = it.isEmpty()
+                },
+                label = { Text("Album Description") },
+                isError = descriptionError,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                supportingText = {
+                    if (descriptionError) {
+                        Text("Description cannot be empty", color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            )
+
+            DropdownSelector(
+                options = listOf("Classical", "Salsa", "Rock", "Folk"),
+                selectedOption = selectedGenre,
+                onOptionSelected = { genre ->
+                    viewModel.selectedGenre.value = genre
+                    viewModel.genreError.value = genre.isEmpty()
+                },
+                label = "Genre",
+                supportingText = {
+                    if (genreError) {
+                        Text("Genre cannot be empty", color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                isError = genreError
+            )
+
+            DropdownSelector(
+                options = listOf("Sony Music", "EMI", "Discos Fuentes", "Elektra", "Fania Records"),
+                selectedOption = selectedRecord,
+                onOptionSelected = { record ->
+                    viewModel.selectedRecord.value = record
+                    viewModel.recordError.value = record.isEmpty()
+                },
+                label = "Record",
+                supportingText = {
+                    if (recordError) {
+                        Text("Record cannot be empty", color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                isError = recordError
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { viewModel.createAlbum() },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+                Text("Create Album")
+            }
+        }
+
+        SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
     }
 }
