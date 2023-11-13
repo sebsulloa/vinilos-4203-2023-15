@@ -1,17 +1,24 @@
 package com.misw.vinilos.ui.screens.albums
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.Waves
 import androidx.compose.material3.Icon
@@ -23,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.Artist
 import com.misw.vinilos.data.remote.models.Track
@@ -30,28 +38,43 @@ import com.misw.vinilos.ui.screens.artists.ArtistListItem
 
 @Composable
 fun AlbumDetailsScreen(album: Album) {
-    Column() {
-        // Album Image
-        /*Image(
-            painter = rememberCoilPainter(request = album.cover),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(shape = MaterialTheme.shapes.medium)
-        )*/
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
 
-        // Album Information
-        AlbumInfoSection(album = album)
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            // Album Image
+            Image(
+                painter = rememberAsyncImagePainter(model = album.cover),
+                contentDescription = null,
+                alignment = Alignment.Center,
+                modifier = Modifier
+                    .size(200.dp)
+            )
+
+            // Album Information
+            AlbumInfoSection(album = album)
+        }
 
         // Tracks Section
-        SectionTitle(title = "Tracks")
-        AlbumTracksList(tracks = album.tracks)
+        item {
+            SectionTitle(title = "Tracks")
+        }
+        item {
+            AlbumTracksList(tracks = album.tracks)
+        }
 
         // Performers Section
-        SectionTitle(title = "Artists")
-        AlbumArtistsList(performers = album.performers)
+        item {
+            SectionTitle(title = "Artists") }
+        item {
+            AlbumArtistsList(performers = album.performers)
+        }
     }
 }
 
@@ -62,10 +85,14 @@ fun AlbumInfoSection(album: Album) {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        AlbumInfoItem(label = "Fecha de lanzamiento", value = album.releaseDate, icon = Icons.Default.Event)
-        AlbumInfoItem(label = "Descripción", value = album.description, icon = Icons.Default.TextFields)
-        AlbumInfoItem(label = "Género", value = album.genre, icon = Icons.Default.Waves)
-        AlbumInfoItem(label = "Sello Discografico", value = album.recordLabel, icon = Icons.AutoMirrored.Default.Label)
+        AlbumInfoItem(label = "Release Date", value = album.releaseDate, icon = Icons.Default.Event)
+        AlbumInfoItem(label = "Description", value = album.description, icon = Icons.Default.Info)
+        AlbumInfoItem(label = "Genre", value = album.genre, icon = Icons.Default.MusicNote)
+        AlbumInfoItem(
+            label = "Record Label",
+            value = album.recordLabel,
+            icon = Icons.AutoMirrored.Default.Label
+        )
     }
 }
 
@@ -80,8 +107,8 @@ fun AlbumInfoItem(label: String, value: String, icon: ImageVector) {
         Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(8.dp))
         Column {
-            Text(text = label, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-            Text(text = value, fontSize = 16.sp)
+            Text(text = label, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(text = value, fontSize = 12.sp)
         }
     }
 }
