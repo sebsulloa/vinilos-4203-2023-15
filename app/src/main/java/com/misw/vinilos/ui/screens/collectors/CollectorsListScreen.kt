@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.misw.vinilos.data.remote.models.Collector
 import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.CollectorsViewModel
+
 @Composable
 fun CollectorsListScreen(viewModel: CollectorsViewModel) {
     val collectors = viewModel.collectors.value
@@ -56,11 +57,10 @@ fun CollectorsListScreen(viewModel: CollectorsViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectorListItem(collector: Collector) {
     ListItem(
-        headlineText = { Text(collector.name) },
+        headlineContent = { Text(collector.name) },
         leadingContent = {
             Surface(
                 shape = CircleShape,
