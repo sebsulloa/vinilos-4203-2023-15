@@ -59,7 +59,7 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
 @Composable
 fun ArtistListItem(artist: Artist) {
     ListItem(
-        headlineContent = { Text(artist.name) },
+        headlineText = { Text(artist.name) },
         leadingContent = {
             Image(
                 painter = rememberAsyncImagePainter(model = artist.image),

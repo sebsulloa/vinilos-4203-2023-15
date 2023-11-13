@@ -61,8 +61,8 @@ fun AlbumsListScreen(viewModel: AlbumsViewModel) {
 @Composable
 fun AlbumListItem(album: Album) {
     ListItem(
-        headlineContent = { Text(album.name) },
-        supportingContent = { Text(album.genre) },
+        headlineText = { Text(album.name) },
+        supportingText = { Text(album.genre) },
         leadingContent = {
             Image(
                 painter = rememberAsyncImagePainter(model = album.cover),

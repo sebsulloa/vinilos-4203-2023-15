@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    kotlin("plugin.serialization")
 }
 
 android {
@@ -76,8 +75,8 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.navigation:navigation-compose:2.7.5")
-    implementation("androidx.compose.material3:material3:1.2.0-alpha10")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -87,10 +86,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.google.dagger:hilt-android:2.48.1")
     kapt("com.google.dagger:hilt-compiler:2.48.1")
-    implementation("com.github.skydoves:sandwich-retrofit:2.0.1")
-    implementation("com.github.skydoves:sandwich-retrofit-serialization:2.0.1")
+    implementation("com.github.skydoves:sandwich:1.3.9")
     implementation("io.github.serpro69:kotlin-faker:1.15.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

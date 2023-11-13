@@ -2,7 +2,7 @@ package com.misw.vinilos.di
 
 import com.misw.vinilos.data.remote.services.AlbumService
 import com.misw.vinilos.data.remote.services.ArtistService
-import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
+import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
