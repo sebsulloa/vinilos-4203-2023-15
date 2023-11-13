@@ -14,6 +14,7 @@ import com.misw.vinilos.R
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     object Albums : Screen("albums", Icons.Filled.Album ,R.string.tab_albums)
     object CreateAlbum : Screen("create_album", Icons.Filled.AddBox, R.string.create_album)
+    object AlbumDetails: Screen("album_details", Icons.Filled.Album, R.string.album_details)
     object Artists : Screen("artists", Icons.Filled.Mic ,R.string.tab_artists)
     object Collectors : Screen("collectors", Icons.Filled.Person ,R.string.tab_collectors)
 }
