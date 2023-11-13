@@ -29,5 +29,4 @@ class ArtistsE2ETest {
         composeTestRule.onNodeWithTag("ArtistsNavItem").performClick()
         composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
     }
-
 }

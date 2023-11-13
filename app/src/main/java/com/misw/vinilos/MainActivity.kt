@@ -46,6 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +58,6 @@ class MainActivity : ComponentActivity() {
             val albumsViewModel: AlbumsViewModel by viewModels()
             val artistsViewModel: ArtistsViewModel by viewModels()
             val createAlbumViewModel: AlbumCreateViewModel by viewModels()
-
             VinilosTheme {
                 Scaffold(
                     topBar = {
