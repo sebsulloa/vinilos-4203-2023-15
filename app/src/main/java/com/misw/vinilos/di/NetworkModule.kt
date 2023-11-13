@@ -2,6 +2,7 @@ package com.misw.vinilos.di
 
 import com.misw.vinilos.data.remote.services.AlbumService
 import com.misw.vinilos.data.remote.services.ArtistService
+import com.misw.vinilos.data.remote.services.CollectorService
 import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -32,5 +33,10 @@ object NetworkModule {
     @Provides
     fun provideArtistService(retrofit: Retrofit): ArtistService {
         return retrofit.create(ArtistService::class.java)
+    }
+
+    @Provides
+    fun provideCollectorService(retrofit: Retrofit): CollectorService {
+        return retrofit.create(CollectorService::class.java)
     }
 }
