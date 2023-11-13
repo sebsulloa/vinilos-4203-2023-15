@@ -4,6 +4,8 @@ import com.misw.vinilos.data.remote.services.AlbumService
 import com.misw.vinilos.data.repository.AlbumRepository
 import com.misw.vinilos.data.remote.services.ArtistService
 import com.misw.vinilos.data.repository.ArtistRepository
+import com.misw.vinilos.data.remote.services.CollectorService
+import com.misw.vinilos.data.repository.CollectorRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +25,12 @@ object AppModule {
     @Singleton
     fun provideArtistRepository(artistService: ArtistService): ArtistRepository {
         return ArtistRepository(artistService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCollectorRepository(collectorService: CollectorService): CollectorRepository {
+        return CollectorRepository(collectorService)
     }
 }
 

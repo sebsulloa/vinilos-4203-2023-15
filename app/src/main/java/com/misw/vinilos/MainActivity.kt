@@ -38,6 +38,7 @@ import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
 import com.misw.vinilos.ui.screens.collectors.CollectorsListScreen
 import com.misw.vinilos.ui.theme.VinilosTheme
+import com.misw.vinilos.viewmodels.CollectorsViewModel
 import com.misw.vinilos.viewmodels.AlbumCreateViewModel
 import com.misw.vinilos.viewmodels.AlbumsViewModel
 import com.misw.vinilos.viewmodels.ArtistsViewModel
@@ -58,6 +59,8 @@ class MainActivity : ComponentActivity() {
             val albumsViewModel: AlbumsViewModel by viewModels()
             val artistsViewModel: ArtistsViewModel by viewModels()
             val createAlbumViewModel: AlbumCreateViewModel by viewModels()
+            val collectorsViewModel: CollectorsViewModel by viewModels()
+
             VinilosTheme {
                 Scaffold(
                     topBar = {
@@ -150,7 +153,7 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Albums.route) { AlbumsListScreen(albumsViewModel) }
                         composable(Screen.CreateAlbum.route) { AlbumCreateScreen(createAlbumViewModel) }
                         composable(Screen.Artists.route) { ArtistsListScreen(artistsViewModel) }
-                        composable(Screen.Collectors.route) { CollectorsListScreen() }
+                        composable(Screen.Collectors.route) { CollectorsListScreen(collectorsViewModel) }
                     }
                 }
             }

@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    kotlin("plugin.serialization"
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -52,7 +52,6 @@ android {
             merges += "META-INF/LICENSE-notice.md"
         }
     }
-
     testOptions {
         packaging {
             jniLibs {
