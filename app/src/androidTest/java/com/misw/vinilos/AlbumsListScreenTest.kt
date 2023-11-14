@@ -1,9 +1,12 @@
 package com.misw.vinilos
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.navigation.compose.ComposeNavigator
+import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
 import com.misw.vinilos.viewmodels.AlbumsViewModel
@@ -19,6 +22,8 @@ class AlbumsListScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    lateinit var navController: TestNavHostController
+
     @Test
     fun testLoadingState() {
         // Given
@@ -30,7 +35,9 @@ class AlbumsListScreenTest {
         every { mockViewModel.hasError } returns mutableStateOf(false)
 
         composeTestRule.setContent {
-            AlbumsListScreen(viewModel = mockViewModel)
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            AlbumsListScreen(viewModel = mockViewModel, navController = navController)
         }
 
         // Then
@@ -48,7 +55,9 @@ class AlbumsListScreenTest {
         every { mockViewModel.hasError } returns mutableStateOf(true)
 
         composeTestRule.setContent {
-            AlbumsListScreen(viewModel = mockViewModel)
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            AlbumsListScreen(viewModel = mockViewModel, navController = navController)
         }
 
         // Then
@@ -67,7 +76,9 @@ class AlbumsListScreenTest {
         every { mockViewModel.hasError } returns mutableStateOf(false)
 
         composeTestRule.setContent {
-            AlbumsListScreen(viewModel = mockViewModel)
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            AlbumsListScreen(viewModel = mockViewModel, navController = navController)
         }
 
         // Then
