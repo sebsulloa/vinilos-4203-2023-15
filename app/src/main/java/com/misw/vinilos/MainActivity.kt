@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
             VinilosTheme {
                 Scaffold(
                     topBar = {
-                        Log.d("Destination", "${currentDestination?.route}")
                         if (currentDestination?.route == Screen.CreateAlbum.route
                             || currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true){
                             TopAppBar(
