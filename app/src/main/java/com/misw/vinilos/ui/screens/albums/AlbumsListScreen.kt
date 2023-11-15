@@ -54,7 +54,6 @@ fun AlbumsListScreen(viewModel: AlbumsViewModel, navController: NavController) {
                 items(albums) { album ->
                     AlbumListItem(album = album){
                         viewModel.onAlbumSelected(album)
-                        Log.d("destination item", "${Screen.AlbumDetails.route}/${album.id}")
                         navController.navigate(Screen.AlbumDetails.route + "/${album.id}")
                     }
                 }
