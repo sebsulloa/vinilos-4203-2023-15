@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.misw.vinilos.data.local.dao.AlbumDao
 import com.misw.vinilos.data.local.dao.AppDatabase
+import com.misw.vinilos.data.local.dao.ArtistDao
+import com.misw.vinilos.data.local.dao.TrackDao
 import com.misw.vinilos.data.remote.services.AlbumService
 import com.misw.vinilos.data.repository.AlbumRepository
 import com.misw.vinilos.data.remote.services.ArtistService
@@ -22,8 +24,8 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideAlbumRepository(albumService: AlbumService, albumDao: AlbumDao): AlbumRepository {
-        return AlbumRepository(albumService, albumDao)
+    fun provideAlbumRepository(albumService: AlbumService, albumDao: AlbumDao, trackDao: TrackDao, artistDao: ArtistDao): AlbumRepository {
+        return AlbumRepository(albumService, albumDao, trackDao, artistDao)
     }
 
     @Provides
@@ -44,13 +46,27 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java, "app-database"
-        ).build()
+        ).
+        fallbackToDestructiveMigration().
+        build()
     }
 
     @Provides
     @Singleton
     fun provideAlbumDao(appDatabase: AppDatabase): AlbumDao {
         return appDatabase.albumDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideArtistDao(appDatabase: AppDatabase): ArtistDao {
+        return appDatabase.artistDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providetrackDao(appDatabase: AppDatabase): TrackDao {
+        return appDatabase.trackDao()
     }
 }
 

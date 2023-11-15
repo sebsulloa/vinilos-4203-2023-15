@@ -30,10 +30,13 @@ data class AlbumWithRelations(
     @Embedded val album: AlbumEntity,
     @Relation(parentColumn = "id", entityColumn = "albumId")
     val tracks: List<TrackEntity>,
-    @Relation(parentColumn = "id", entityColumn = "albumId", associateBy = Junction(AlbumArtistCrossRef::class))
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(AlbumArtistCrossRef::class, parentColumn = "albumId", entityColumn = "artistId")
+    )
     val artists: List<ArtistEntity>
-)
-{
+) {
     fun toAlbum(): Album {
         return Album(
             id = album.id,
@@ -43,8 +46,17 @@ data class AlbumWithRelations(
             description = album.description,
             genre = album.genre,
             recordLabel = album.recordLabel,
-            tracks = tracks.map  { Track(it.id, it.name, it.duration) },
-            performers =  artists.map { Artist(it.id, it.name, it.image, it.description, it.birthDate, emptyList()) }
+            tracks = tracks.map { Track(it.id, it.name, it.duration) },
+            performers = artists.map {
+                Artist(
+                    it.id,
+                    it.name,
+                    it.image,
+                    it.description,
+                    it.birthDate +"",
+                    emptyList()
+                )
+            }
         )
     }
 }
