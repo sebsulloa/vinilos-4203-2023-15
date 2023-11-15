@@ -16,6 +16,8 @@ Antes de comenzar, asegúrate de seguir estos pasos para ejecutar la aplicación
 
 - Lista de los álbumes disponibles en Vinilos
 - Lista de los artistas disponibles en Vinilos
+- Detalle de un álbum disponible
+- Creación de un álbum nuevo
 
 ⚠️⚠️⚠️ Con el objetivo de presentar una lista con múltiples artistas y álbumes, se ha utilizado Postman Collection Runner para que se creen datos repetidos. Los listados en la aplicación contienen 3 artistas y 2 álbumes que se repiten a lo largo de los listados.
 
