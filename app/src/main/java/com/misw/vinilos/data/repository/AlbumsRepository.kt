@@ -1,7 +1,11 @@
 package com.misw.vinilos.data.repository
 
-import android.util.Log
 import com.misw.vinilos.data.local.dao.AlbumDao
+import com.misw.vinilos.data.local.dao.ArtistDao
+import com.misw.vinilos.data.local.dao.TrackDao
+import com.misw.vinilos.data.local.entities.AlbumArtistCrossRef
+import com.misw.vinilos.data.local.entities.ArtistEntity
+import com.misw.vinilos.data.local.entities.TrackEntity
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.AlbumCreateRequest
 import com.misw.vinilos.data.remote.services.AlbumService
@@ -10,7 +14,10 @@ import javax.inject.Inject
 
 class AlbumRepository @Inject constructor(
     private val albumService: AlbumService,
-    private val albumDao: AlbumDao
+    private val albumDao: AlbumDao,
+    private val trackDao: TrackDao,
+    private val artistDao: ArtistDao
+
 ) {
     suspend fun getAlbums(): ApiResponse<List<Album>> {
         val localAlbums = albumDao.getAllAlbums()
@@ -22,7 +29,27 @@ class AlbumRepository @Inject constructor(
 
         if (remoteResponse is ApiResponse.Success) {
             val remoteAlbums = remoteResponse.data
-            remoteAlbums.forEach { albumDao.insertAlbum(it.toAlbumEntity()) }
+
+            // Batch insert albums
+            val albumEntities = remoteAlbums.map { it.toAlbumEntity() }
+            albumDao.insertAlbums(albumEntities)
+
+            // Batch insert tracks
+            val trackEntities = remoteAlbums.flatMap { album ->
+                album.tracks.map { TrackEntity(it.id, it.name, it.duration, album.id) }
+            }
+            trackDao.insertTracks(trackEntities)
+
+            // Batch insert artists and album artists
+            val artistEntities = remoteAlbums.flatMap { album ->
+                album.performers.map { ArtistEntity(it.id, it.name, it.image, it.description, it.birthDate) }
+            }
+            val albumArtistCrossRefs = remoteAlbums.flatMap { album ->
+                album.performers.map { AlbumArtistCrossRef(album.id, it.id) }
+            }
+
+            artistDao.insertArtists(artistEntities)
+            albumDao.insertAlbumArtists(albumArtistCrossRefs)
         }
 
         return remoteResponse

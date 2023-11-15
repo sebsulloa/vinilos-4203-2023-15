@@ -14,14 +14,14 @@ data class Album(
     val performers: List<Artist>
 ) {
     fun toAlbumEntity(): AlbumEntity {
-        return AlbumEntity(
+         return AlbumEntity(
             id = id,
             name = name,
             cover = cover,
             releaseDate = releaseDate,
             description = description,
             genre = genre,
-            recordLabel = recordLabel
+            recordLabel = recordLabel,
         )
     }
 }
