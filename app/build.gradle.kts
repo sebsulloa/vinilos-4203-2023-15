@@ -94,6 +94,7 @@ dependencies {
     implementation("com.github.skydoves:sandwich-retrofit-serialization:2.0.1")
     implementation("io.github.serpro69:kotlin-faker:1.15.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.32.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
