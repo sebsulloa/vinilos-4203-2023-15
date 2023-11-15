@@ -1,6 +1,8 @@
 package com.misw.vinilos.ui.screens.albums
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,13 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.misw.vinilos.data.remote.models.Album
+import com.misw.vinilos.navigation.Screen
 import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.AlbumsViewModel
 
 @Composable
-fun AlbumsListScreen(viewModel: AlbumsViewModel) {
+fun AlbumsListScreen(viewModel: AlbumsViewModel, navController: NavController) {
     val albums = viewModel.albums.value
     val isLoading = viewModel.isLoading.value
     val hasError = viewModel.hasError.value
@@ -48,19 +52,21 @@ fun AlbumsListScreen(viewModel: AlbumsViewModel) {
         else -> {
             LazyColumn(modifier = Modifier.testTag("albumList")) {
                 items(albums) { album ->
-                    AlbumListItem(album = album)
+                    AlbumListItem(album = album){
+                        viewModel.onAlbumSelected(album)
+                        Log.d("destination item", "${Screen.AlbumDetails.route}/${album.id}")
+                        navController.navigate(Screen.AlbumDetails.route + "/${album.id}")
+                    }
                 }
             }
         }
     }
 }
 
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlbumListItem(album: Album) {
+fun AlbumListItem(album: Album, onClick: () -> Unit) {
     ListItem(
+        modifier = Modifier.clickable { onClick() },
         headlineContent = { Text(album.name) },
         supportingContent = { Text(album.genre) },
         leadingContent = {
@@ -75,6 +81,6 @@ fun AlbumListItem(album: Album) {
                 imageVector = Icons.Filled.ArrowRight,
                 contentDescription = null
             )
-        }
+        },
     )
 }

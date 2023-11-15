@@ -2,6 +2,7 @@ package com.misw.vinilos
 
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.Artist
+import com.misw.vinilos.data.remote.models.Collector
 import io.github.serpro69.kfaker.Faker
 import java.time.format.DateTimeFormatter
 
@@ -29,6 +30,14 @@ object DataFactory {
             image = faker.random.randomString(length = 15),
             description =faker.random.randomString(length = 15),
             albums = (1..5).map { createAlbum() }
+        )
+    }
+    fun createCollector(): Collector {
+        return Collector(
+            id = faker.random.nextInt(intRange = 0..1000),
+            name = faker.name.name(),
+            telephone = faker.phoneNumber.phoneNumber(),
+            email = faker.internet.email(),
         )
     }
 }

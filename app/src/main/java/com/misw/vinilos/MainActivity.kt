@@ -2,12 +2,14 @@ package com.misw.vinilos
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -24,20 +26,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.core.os.toPersistableBundle
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.misw.vinilos.navigation.Screen
 import com.misw.vinilos.navigation.title
 import com.misw.vinilos.ui.components.AlbumFloatingActionButton
 import com.misw.vinilos.ui.components.BottomNavigationItem
 import com.misw.vinilos.ui.screens.albums.AlbumCreateScreen
+import com.misw.vinilos.ui.screens.albums.AlbumDetailsScreen
 import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
 import com.misw.vinilos.ui.screens.collectors.CollectorsListScreen
 import com.misw.vinilos.ui.theme.VinilosTheme
+import com.misw.vinilos.viewmodels.CollectorsViewModel
 import com.misw.vinilos.viewmodels.AlbumCreateViewModel
 import com.misw.vinilos.viewmodels.AlbumsViewModel
 import com.misw.vinilos.viewmodels.ArtistsViewModel
@@ -58,15 +65,18 @@ class MainActivity : ComponentActivity() {
             val albumsViewModel: AlbumsViewModel by viewModels()
             val artistsViewModel: ArtistsViewModel by viewModels()
             val createAlbumViewModel: AlbumCreateViewModel by viewModels()
+            val collectorsViewModel: CollectorsViewModel by viewModels()
+
             VinilosTheme {
                 Scaffold(
                     topBar = {
-                        if (currentDestination?.route == Screen.CreateAlbum.route) {
+                        if (currentDestination?.route == Screen.CreateAlbum.route
+                            || currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true){
                             TopAppBar(
                                 navigationIcon = {
                                     IconButton(onClick = { navController.navigateUp() }) {
                                         Icon(
-                                            imageVector = Icons.Filled.ArrowBack,
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                             contentDescription = "Back"
                                         )
                                     }
@@ -74,7 +84,17 @@ class MainActivity : ComponentActivity() {
                                 title = {
                                     Text(
                                         modifier = Modifier.testTag("topAppBarTitle"),
-                                        text = Screen.CreateAlbum.title()
+                                        text = currentDestination?.let { destination ->
+                                            when {
+                                                destination.route == Screen.CreateAlbum.route -> Screen.CreateAlbum.title()
+                                                destination.route?.startsWith(Screen.AlbumDetails.route) == true -> {
+                                                    val albumId = navBackStackEntry?.arguments?.getInt("albumId")?: -1
+                                                    val selectedAlbum = albumsViewModel.albums.value.find { it.id == albumId }
+                                                    selectedAlbum?.name ?: ""
+                                                }
+                                                else -> ""
+                                            }
+                                        } ?: ""
                                     )
                                 },
                                 colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -147,10 +167,24 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.Albums.route,
                         Modifier.padding(innerPadding)
                     ) {
-                        composable(Screen.Albums.route) { AlbumsListScreen(albumsViewModel) }
+                        composable(Screen.Albums.route) { AlbumsListScreen(albumsViewModel, navController) }
                         composable(Screen.CreateAlbum.route) { AlbumCreateScreen(createAlbumViewModel) }
+                        composable(
+                            route = "${Screen.AlbumDetails.route}/{albumId}",
+                            arguments = listOf(navArgument("albumId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val arguments = requireNotNull(backStackEntry.arguments)
+                            val albumId = arguments.getInt("albumId")
+                            val selectedAlbum = albumsViewModel.albums.value.find { it.id == albumId }
+                            if (selectedAlbum != null) {
+                                AlbumDetailsScreen(selectedAlbum)
+                            } else {
+                                // Handle error, album not found
+                            }
+                        }
+
                         composable(Screen.Artists.route) { ArtistsListScreen(artistsViewModel) }
-                        composable(Screen.Collectors.route) { CollectorsListScreen() }
+                        composable(Screen.Collectors.route) { CollectorsListScreen(collectorsViewModel) }
                     }
                 }
             }
