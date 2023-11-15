@@ -11,18 +11,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.misw.vinilos.data.remote.models.Collector
 import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.CollectorsViewModel
@@ -32,6 +35,7 @@ fun CollectorsListScreen(viewModel: CollectorsViewModel) {
     val collectors = viewModel.collectors.value
     val isLoading = viewModel.isLoading.value
     val hasError = viewModel.hasError.value
+    val isRefreshing = remember { mutableStateOf(false) }
 
     when {
         isLoading -> {
@@ -49,9 +53,18 @@ fun CollectorsListScreen(viewModel: CollectorsViewModel) {
             )
         }
         else -> {
-            LazyColumn(modifier = Modifier.testTag("collectorList")){
-                items(collectors) { collector ->
-                    CollectorListItem(collector = collector)
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
+                onRefresh = {
+                    isRefreshing.value = true
+                    viewModel.fetchCollectors() // Call your fetch function
+                    isRefreshing.value = false
+                }
+            ) {
+                LazyColumn(modifier = Modifier.testTag("collectorList")) {
+                    items(collectors) { collector ->
+                        CollectorListItem(collector = collector)
+                    }
                 }
             }
         }
