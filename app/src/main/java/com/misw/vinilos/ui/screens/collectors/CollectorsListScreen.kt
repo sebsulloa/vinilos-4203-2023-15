@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.misw.vinilos.data.remote.models.Collector
 import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.CollectorsViewModel
@@ -61,6 +62,7 @@ fun CollectorsListScreen(viewModel: CollectorsViewModel) {
 fun CollectorListItem(collector: Collector) {
     ListItem(
         headlineContent = { Text(collector.name) },
+        supportingContent = { Text(collector.email, fontSize = 14.sp) },
         leadingContent = {
             Surface(
                 shape = CircleShape,

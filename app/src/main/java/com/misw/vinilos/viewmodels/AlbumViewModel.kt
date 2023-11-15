@@ -1,5 +1,6 @@
 package com.misw.vinilos.viewmodels
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,9 @@ class AlbumsViewModel @Inject constructor(
     val isLoading = mutableStateOf(false)
     val hasError = mutableStateOf(false)
 
+    private val _selectedAlbum = mutableStateOf<Album?>(null)
+    val selectedAlbum: State<Album?> get() = _selectedAlbum
+
     init {
         fetchAlbums()
     }
@@ -35,5 +39,9 @@ class AlbumsViewModel @Inject constructor(
                 isLoading.value = false
             }
         }
+    }
+
+    fun onAlbumSelected(album: Album) {
+        _selectedAlbum.value = album
     }
 }
