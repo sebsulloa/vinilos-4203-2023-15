@@ -1,5 +1,6 @@
 package com.misw.vinilos
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -13,20 +14,21 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class AlbumsE2ETest {
+@OptIn(ExperimentalTestApi::class)
+class CollectorsE2ETest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun testClickAlbumsNavigationItem() {
-        composeTestRule.onNodeWithTag("AlbumsNavItem").performClick()
-        composeTestRule.onNodeWithTag("topAppBarTitle").assertTextEquals("Albums")
+    fun testClickCollectorsNavigationItem() {
+        composeTestRule.onNodeWithTag("CollectorsNavItem").performClick()
+        composeTestRule.onNodeWithTag("topAppBarTitle").assertTextEquals("Collectors")
     }
 
     @Test
-    fun testAlbumsLoading() {
-        composeTestRule.onNodeWithTag("AlbumsNavItem").performClick()
+    fun testCollectorsLoading() {
+        composeTestRule.onNodeWithTag("CollectorsNavItem").performClick()
         composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
     }
 }

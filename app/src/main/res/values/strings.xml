@@ -4,4 +4,6 @@
     <string name="tab_artists">Artists</string>
     <string name="tab_collectors">Collectors</string>
     <string name="loading_failed">Failed to load</string>
+    <string name="create_album">Create album</string>
+    <string name="album_details">Album Details</string>
 </resources>
