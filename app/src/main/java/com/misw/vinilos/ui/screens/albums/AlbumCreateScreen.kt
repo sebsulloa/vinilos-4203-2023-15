@@ -150,7 +150,7 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                     if (date != null) {
                         viewModel.albumReleaseDate.value = formatDateForDisplay(date)
                         viewModel.releaseDateError.value = formatDateForDisplay(date).isEmpty()
-                        viewModel.albumReleaseDateMillis.value = date
+                        viewModel.albumReleaseDateMillis.longValue = date
                     }
                 }
             )

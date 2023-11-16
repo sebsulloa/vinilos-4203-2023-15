@@ -23,7 +23,7 @@ class ArtistsViewModel @Inject constructor(
         fetchArtists()
     }
 
-    private fun fetchArtists() {
+    fun fetchArtists() {
         viewModelScope.launch {
             try {
                 isLoading.value = true
