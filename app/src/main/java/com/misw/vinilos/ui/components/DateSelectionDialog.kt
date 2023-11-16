@@ -10,6 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,7 +20,8 @@ fun DateSelectionDialog(
     showDialog: MutableState<Boolean>,
     onDateSelected: (Long?) -> Unit,
 ) {
-    val datePickerState = rememberDatePickerState()
+    val calendar = Calendar.getInstance()
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = calendar.timeInMillis)
     val confirmEnabled = remember(datePickerState) {
         derivedStateOf { datePickerState.selectedDateMillis != null }
     }
@@ -33,7 +37,8 @@ fun DateSelectionDialog(
                         showDialog.value = false
                         onDateSelected(datePickerState.selectedDateMillis)
                     },
-                    enabled = confirmEnabled.value
+                    enabled = confirmEnabled.value,
+                    modifier = Modifier.testTag("confirm_button")
                 ) {
                     Text("OK")
                 }
@@ -42,7 +47,8 @@ fun DateSelectionDialog(
                 TextButton(
                     onClick = {
                         showDialog.value = false
-                    }
+                    },
+                    modifier = Modifier.testTag("dismiss_button")
                 ) {
                     Text("Cancel")
                 }
