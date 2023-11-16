@@ -16,6 +16,7 @@ Antes de comenzar, asegúrate de seguir estos pasos para ejecutar la aplicación
 
 - Lista de los álbumes disponibles en Vinilos
 - Lista de los artistas disponibles en Vinilos
+- Lista de los coleccionistas disponibles en Vinilos
 - Detalle de un álbum disponible
 - Creación de un álbum nuevo
 
