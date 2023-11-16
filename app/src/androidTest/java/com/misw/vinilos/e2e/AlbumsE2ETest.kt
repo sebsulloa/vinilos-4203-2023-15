@@ -1,4 +1,4 @@
-package com.misw.vinilos
+package com.misw.vinilos.e2e
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
@@ -11,6 +11,8 @@ import org.junit.runner.RunWith
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import com.misw.vinilos.DataFactory
+import com.misw.vinilos.MainActivity
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest

@@ -1,4 +1,4 @@
-package com.misw.vinilos
+package com.misw.vinilos.ui
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.misw.vinilos.DataFactory
 import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
 import com.misw.vinilos.viewmodels.AlbumsViewModel
 import io.mockk.every
