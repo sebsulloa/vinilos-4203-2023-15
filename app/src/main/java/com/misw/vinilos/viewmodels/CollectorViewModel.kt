@@ -23,7 +23,7 @@ class CollectorsViewModel @Inject constructor(
         fetchCollectors()
     }
 
-    private fun fetchCollectors() {
+    fun fetchCollectors() {
         viewModelScope.launch {
             try {
                 isLoading.value = true

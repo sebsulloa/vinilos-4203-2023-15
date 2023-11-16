@@ -15,11 +15,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.misw.vinilos.data.remote.models.Artist
 import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.ArtistsViewModel
@@ -29,6 +33,7 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
     val artists = viewModel.artists.value
     val isLoading = viewModel.isLoading.value
     val hasError = viewModel.hasError.value
+    val isRefreshing = remember { mutableStateOf(false) }
 
     when {
         isLoading -> {
@@ -46,9 +51,18 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
             )
         }
         else -> {
-            LazyColumn(modifier = Modifier.testTag("artistList")){
-                items(artists) { artist ->
-                    ArtistListItem(artist = artist)
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
+                onRefresh = {
+                    isRefreshing.value = true
+                    viewModel.fetchArtists()
+                    isRefreshing.value = false
+                }
+            ) {
+                LazyColumn(modifier = Modifier.testTag("artistList")) {
+                    items(artists) { artist ->
+                        ArtistListItem(artist = artist)
+                    }
                 }
             }
         }
