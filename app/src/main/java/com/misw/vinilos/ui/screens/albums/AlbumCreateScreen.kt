@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.misw.vinilos.ui.components.DateSelectionDialog
 import com.misw.vinilos.ui.components.DropdownSelector
@@ -97,7 +98,8 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                 singleLine = true,
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("AlbumNameField"),
                 supportingText = {
                     if (nameError) {
                         Text("Name cannot be empty", color = MaterialTheme.colorScheme.error)
@@ -115,7 +117,8 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                 singleLine = true,
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("AlbumCoverField"),
                 supportingText = {
                     if (coverError) {
                         Text(
@@ -136,7 +139,8 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                 isError = descriptionError,
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("AlbumDescriptionField"),
                 supportingText = {
                     if (descriptionError) {
                         Text("Description cannot be empty", color = MaterialTheme.colorScheme.error)
@@ -150,7 +154,7 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                     if (date != null) {
                         viewModel.albumReleaseDate.value = formatDateForDisplay(date)
                         viewModel.releaseDateError.value = formatDateForDisplay(date).isEmpty()
-                        viewModel.albumReleaseDateMillis.value = date
+                        viewModel.albumReleaseDateMillis.longValue = date
                     }
                 }
             )
@@ -166,7 +170,8 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .clickable { showDialog.value = true },
+                    .clickable { showDialog.value = true }
+                    .testTag("AlbumReleaseDateField"),
                 supportingText = {
                     if (releaseDateError) {
                         Text("Release date cannot be empty", color = MaterialTheme.colorScheme.error)
@@ -198,7 +203,8 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                         Text("Genre cannot be empty", color = MaterialTheme.colorScheme.error)
                     }
                 },
-                isError = genreError
+                isError = genreError,
+                modifier = Modifier.testTag("AlbumGenreField")
             )
 
             DropdownSelector(
@@ -214,14 +220,16 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                         Text("Record cannot be empty", color = MaterialTheme.colorScheme.error)
                     }
                 },
-                isError = recordError
+                isError = recordError,
+                modifier = Modifier.testTag("AlbumRecordField")
             )
 
             Button(
                 onClick = { viewModel.createAlbum() },
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("AlbumSubmitField"),
                 enabled = !viewModel.isLoading.value,
                 colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
@@ -240,7 +248,9 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
 
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .testTag("AlbumCreationSnackbar")
         )
     }
 }

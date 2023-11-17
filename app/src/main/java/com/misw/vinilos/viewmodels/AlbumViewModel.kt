@@ -27,7 +27,7 @@ class AlbumsViewModel @Inject constructor(
         fetchAlbums()
     }
 
-    private fun fetchAlbums() {
+    fun fetchAlbums() {
         viewModelScope.launch {
             try {
                 isLoading.value = true
