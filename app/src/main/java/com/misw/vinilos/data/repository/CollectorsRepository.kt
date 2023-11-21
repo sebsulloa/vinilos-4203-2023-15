@@ -11,4 +11,8 @@ class CollectorRepository @Inject constructor(
     suspend fun getCollectors(): ApiResponse<List<Collector>> {
         return collectorService.getArtists()
     }
+
+    suspend fun getCollectorDetail(collectorId: Int): ApiResponse<Collector> {
+        return collectorService.getCollectorDetail(collectorId)
+    }
 }
