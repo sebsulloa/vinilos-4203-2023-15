@@ -190,7 +190,6 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val arguments = requireNotNull(backStackEntry.arguments)
                             val artistId = arguments.getInt("artistId")
-                            artistDetailsViewModel.fetchArtistDetail(artistId)
                             ArtistDetailsScreen(viewModel = artistDetailsViewModel, artistId = artistId, navController = navController)
                         }
                         composable(Screen.Collectors.route) { CollectorsListScreen(collectorsViewModel) }
