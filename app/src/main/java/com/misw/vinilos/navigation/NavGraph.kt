@@ -18,6 +18,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     object Artists : Screen("artists", Icons.Filled.Mic ,R.string.tab_artists)
     object ArtistDetails: Screen("artist_details", Icons.Filled.Mic, R.string.artist_details)
     object Collectors : Screen("collectors", Icons.Filled.Person ,R.string.tab_collectors)
+    object CollectorDetails: Screen("collector_details", Icons.Filled.Mic, R.string.collector_details)
 }
 
 
