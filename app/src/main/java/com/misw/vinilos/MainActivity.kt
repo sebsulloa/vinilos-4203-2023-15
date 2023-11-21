@@ -2,7 +2,6 @@ package com.misw.vinilos
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -10,7 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Album
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.core.os.toPersistableBundle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -41,6 +39,7 @@ import com.misw.vinilos.ui.components.BottomNavigationItem
 import com.misw.vinilos.ui.screens.albums.AlbumCreateScreen
 import com.misw.vinilos.ui.screens.albums.AlbumDetailsScreen
 import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
+import com.misw.vinilos.ui.screens.albums.TrackCreateScreen
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
 import com.misw.vinilos.ui.screens.collectors.CollectorsListScreen
 import com.misw.vinilos.ui.theme.VinilosTheme
@@ -48,6 +47,7 @@ import com.misw.vinilos.viewmodels.CollectorsViewModel
 import com.misw.vinilos.viewmodels.AlbumCreateViewModel
 import com.misw.vinilos.viewmodels.AlbumsViewModel
 import com.misw.vinilos.viewmodels.ArtistsViewModel
+import com.misw.vinilos.viewmodels.TrackCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -65,13 +65,13 @@ class MainActivity : ComponentActivity() {
             val albumsViewModel: AlbumsViewModel by viewModels()
             val artistsViewModel: ArtistsViewModel by viewModels()
             val createAlbumViewModel: AlbumCreateViewModel by viewModels()
+            val createTrackViewModel: TrackCreateViewModel by viewModels()
             val collectorsViewModel: CollectorsViewModel by viewModels()
 
             VinilosTheme {
                 Scaffold(
                     topBar = {
-                        if (currentDestination?.route == Screen.CreateAlbum.route
-                            || currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true){
+                        if (currentDestination?.route == Screen.CreateAlbum.route){
                             TopAppBar(
                                 navigationIcon = {
                                     IconButton(onClick = { navController.navigateUp() }) {
@@ -103,7 +103,74 @@ class MainActivity : ComponentActivity() {
                                     navigationIconContentColor = Color.White
                                 )
                             )
-                        } else {
+                        }
+                        else if (currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true){
+                            TopAppBar(
+                                actions = {
+                                    IconButton(onClick = { navController.navigate(Screen.CreateTrack.route) }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Album,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                },
+                                navigationIcon = {
+                                    IconButton(onClick = { navController.navigateUp() }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                },
+                                title = {
+                                    Text(
+                                        modifier = Modifier.testTag("topAppBarTitle"),
+                                        text = currentDestination?.let { destination ->
+                                            when {
+                                                destination.route == Screen.CreateAlbum.route -> Screen.CreateAlbum.title()
+                                                destination.route?.startsWith(Screen.AlbumDetails.route) == true -> {
+                                                    val albumId = navBackStackEntry?.arguments?.getInt("albumId")?: -1
+                                                    val selectedAlbum = albumsViewModel.albums.value.find { it.id == albumId }
+                                                    selectedAlbum?.name ?: ""
+                                                }
+                                                else -> ""
+                                            }
+                                        } ?: ""
+                                    )
+                                },
+                                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    titleContentColor = Color.White,
+                                    navigationIconContentColor = Color.White,
+                                    actionIconContentColor = Color.White
+                                )
+                            )
+                        }
+                        else if (currentDestination?.route == Screen.CreateTrack.route){
+                            TopAppBar(
+                                navigationIcon = {
+                                    IconButton(onClick = { navController.navigateUp() }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                },
+                                title = {
+                                    Text(
+                                        modifier = Modifier.testTag("topAppBarTitle"),
+                                        text = "Create track"
+                                    )
+                                },
+                                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    titleContentColor = Color.White,
+                                    navigationIconContentColor = Color.White,
+                                    actionIconContentColor = Color.White
+                                )
+                            )
+                        }
+                        else {
                             TopAppBar(
                                 title = {
                                     Text(modifier = Modifier.testTag("topAppBarTitle"),
@@ -185,6 +252,13 @@ class MainActivity : ComponentActivity() {
 
                         composable(Screen.Artists.route) { ArtistsListScreen(artistsViewModel) }
                         composable(Screen.Collectors.route) { CollectorsListScreen(collectorsViewModel) }
+                        composable(
+                            route = Screen.CreateTrack.route,
+                            arguments = listOf(navArgument("albumId") { type = NavType.IntType })
+                        ) {
+                            TrackCreateScreen(createTrackViewModel)
+                        }
+
                     }
                 }
             }

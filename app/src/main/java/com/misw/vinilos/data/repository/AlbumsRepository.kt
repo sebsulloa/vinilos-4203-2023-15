@@ -8,6 +8,8 @@ import com.misw.vinilos.data.local.entities.ArtistEntity
 import com.misw.vinilos.data.local.entities.TrackEntity
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.AlbumCreateRequest
+import com.misw.vinilos.data.remote.models.Track
+import com.misw.vinilos.data.remote.models.TrackCreateRequest
 import com.misw.vinilos.data.remote.services.AlbumService
 import com.skydoves.sandwich.ApiResponse
 import javax.inject.Inject
@@ -62,6 +64,11 @@ class AlbumRepository @Inject constructor(
             albumDao.insertAlbum(remoteResponse.data.toAlbumEntity())
         }
 
+        return remoteResponse
+    }
+
+    suspend fun createTrack(albumId: Int, trackCreateRequest: TrackCreateRequest): ApiResponse<Track> {
+        val remoteResponse = albumService.createTrack(albumId, trackCreateRequest)
         return remoteResponse
     }
 }
