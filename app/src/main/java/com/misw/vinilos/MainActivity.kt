@@ -71,7 +71,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         if (currentDestination?.route == Screen.CreateAlbum.route
-                            || currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true){
+                            || currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true
+                            || currentDestination?.route?.startsWith(Screen.ArtistDetails.route) == true){
                             TopAppBar(
                                 navigationIcon = {
                                     IconButton(onClick = { navController.navigateUp() }) {
@@ -91,6 +92,14 @@ class MainActivity : ComponentActivity() {
                                                     val albumId = navBackStackEntry?.arguments?.getInt("albumId")?: -1
                                                     val selectedAlbum = albumsViewModel.albums.value.find { it.id == albumId }
                                                     selectedAlbum?.name ?: ""
+                                                }
+                                                destination.route?.startsWith(Screen.ArtistDetails.route) == true -> {
+                                                    val artistId =
+                                                        navBackStackEntry?.arguments?.getInt("artistId")
+                                                            ?: -1
+                                                    val selectedArtist =
+                                                        artistsViewModel.artists.value.find { it.id == artistId }
+                                                    selectedArtist?.name ?: ""
                                                 }
                                                 else -> ""
                                             }
