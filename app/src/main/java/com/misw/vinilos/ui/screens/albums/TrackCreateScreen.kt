@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -21,11 +22,12 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.misw.vinilos.viewmodels.TrackCreateViewModel
 
@@ -35,15 +37,16 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
     val trackName = viewModel.trackName.value
     val nameError = viewModel.nameError.value
 
-    val trackMinutes = viewModel.trackMinutes.value
+    val trackMinutes = viewModel.trackMinutes.intValue
     val minutesError = viewModel.minutesError.value
 
-    val trackSeconds = viewModel.trackSeconds.value
+    val trackSeconds = viewModel.trackSeconds.intValue
     val secondsError = viewModel.secondsError.value
 
     val isLoading = viewModel.isLoading.value
-    val showDialog = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(key1 = viewModel.successMessage.value) {
         if (viewModel.successMessage.value.isNotEmpty()) {
@@ -95,12 +98,13 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
             OutlinedTextField(
                 value = trackMinutes.toString(),
                 onValueChange = {
-                    viewModel.trackMinutes.value = it.toIntOrNull() ?: 0
+                    viewModel.trackMinutes.intValue = it.toIntOrNull() ?: 0
                     viewModel.minutesError.value = it.isEmpty()
                 },
                 label = { Text("Minutes") },
                 isError = minutesError,
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
@@ -108,7 +112,7 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
                 supportingText = {
                     if (minutesError) {
                         Text(
-                            "Minutes cannot be empty",
+                            "Invalid input",
                             color = MaterialTheme.colorScheme.error
                         )
                     }
@@ -118,12 +122,13 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
             OutlinedTextField(
                 value = trackSeconds.toString(),
                 onValueChange = {
-                    viewModel.trackSeconds.value = it.toIntOrNull() ?: 0
+                    viewModel.trackSeconds.intValue = it.toIntOrNull() ?: 0
                     viewModel.secondsError.value = it.isEmpty()
                 },
                 label = { Text("Seconds") },
                 isError = secondsError,
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
@@ -131,7 +136,7 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
                 supportingText = {
                     if (minutesError) {
                         Text(
-                            "Seconds cannot be empty",
+                            "Invalid input",
                             color = MaterialTheme.colorScheme.error
                         )
                     }
@@ -139,7 +144,10 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
             )
 
             Button(
-                onClick = { viewModel.createTrack(albumId) },
+                onClick = {
+                    keyboardController?.hide()
+                    viewModel.createTrack(albumId)
+                },
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
