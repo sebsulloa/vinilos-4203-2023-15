@@ -2,7 +2,6 @@ package com.misw.vinilos.viewmodels
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.misw.vinilos.data.remote.models.ErrorResponse
@@ -18,11 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrackCreateViewModel @Inject constructor(
-    private val repository: AlbumRepository,
-    savedStateHandle: SavedStateHandle
+    private val repository: AlbumRepository
 ) : ViewModel() {
-
-    private val albumId: Int = savedStateHandle["albumId"] ?: throw IllegalStateException("Album ID not found")
 
     // State variables for inputs
     var trackName = mutableStateOf("")
@@ -39,7 +35,13 @@ class TrackCreateViewModel @Inject constructor(
     var successMessage = mutableStateOf("")
     var errorMessage = mutableStateOf("")
 
-    fun createTrack() {
+    fun createTrack(albumId: Int?) {
+
+        if (albumId == null) {
+            errorMessage.value = "Album ID is required"
+            return
+        }
+
         if (validateInputs()) {
             viewModelScope.launch {
                 isLoading.value = true

@@ -107,11 +107,16 @@ class MainActivity : ComponentActivity() {
                         else if (currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true){
                             TopAppBar(
                                 actions = {
-                                    IconButton(onClick = { navController.navigate(Screen.CreateTrack.route) }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Album,
-                                            contentDescription = "Back"
-                                        )
+                                    val albumId = navBackStackEntry?.arguments?.getInt("albumId") ?: -1
+                                    if (albumId != -1) {
+                                        IconButton(onClick = {
+                                            navController.navigate("album/$albumId/tracks")
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Album,
+                                                contentDescription = "Create Track"
+                                            )
+                                        }
                                     }
                                 },
                                 navigationIcon = {
@@ -255,8 +260,9 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = Screen.CreateTrack.route,
                             arguments = listOf(navArgument("albumId") { type = NavType.IntType })
-                        ) {
-                            TrackCreateScreen(createTrackViewModel)
+                        ) { backStackEntry ->
+                            val arguments = requireNotNull(backStackEntry.arguments)
+                            TrackCreateScreen(createTrackViewModel, arguments.getInt("albumId"))
                         }
 
                     }

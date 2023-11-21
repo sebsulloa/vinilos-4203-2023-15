@@ -31,7 +31,7 @@ import com.misw.vinilos.viewmodels.TrackCreateViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TrackCreateScreen(viewModel: TrackCreateViewModel) {
+fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
     val trackName = viewModel.trackName.value
     val nameError = viewModel.nameError.value
 
@@ -139,7 +139,7 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel) {
             )
 
             Button(
-                onClick = { viewModel.createTrack() },
+                onClick = { viewModel.createTrack(albumId) },
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
