@@ -46,8 +46,8 @@ class TrackCreateViewModel @Inject constructor(
             viewModelScope.launch {
                 isLoading.value = true
 
-                val formattedMinutes = String.format("%02d", trackMinutes.value)
-                val formattedSeconds = String.format("%02d", trackSeconds.value)
+                val formattedMinutes = String.format("%02d", trackMinutes.intValue)
+                val formattedSeconds = String.format("%02d", trackSeconds.intValue)
 
                 val trackCreateRequest = TrackCreateRequest(
                     name = trackName.value,
@@ -56,11 +56,11 @@ class TrackCreateViewModel @Inject constructor(
 
                 repository.createTrack(albumId, trackCreateRequest)
                     .onSuccess {
-                        successMessage.value = "Album created successfully"
+                        successMessage.value = "Track created successfully"
                         clearInputs()
                     }
                     .onErrorDeserialize<Track, ErrorResponse> { errorResponse ->
-                        errorMessage.value = "Error creating album: ${errorResponse.message}"
+                        errorMessage.value = "Error creating track: ${errorResponse.message}"
                     }
                     .onException {
                         errorMessage.value = "Exception occurred: $message"
@@ -73,8 +73,8 @@ class TrackCreateViewModel @Inject constructor(
 
     fun clearInputs() {
         trackName.value = ""
-        trackMinutes.value = 0
-        trackSeconds.value = 0
+        trackMinutes.intValue = 0
+        trackSeconds.intValue = 0
 
         // Reset error states
         nameError.value = false
@@ -84,8 +84,8 @@ class TrackCreateViewModel @Inject constructor(
 
     private fun validateInputs(): Boolean {
         nameError.value = trackName.value.isBlank()
-        minutesError.value = trackMinutes.value < 0 || trackMinutes.value > 59
-        secondsError.value = trackSeconds.value < 0 || trackSeconds.value > 59
+        minutesError.value = trackMinutes.intValue < 0 || trackMinutes.intValue > 59
+        secondsError.value = trackSeconds.intValue < 0 || trackSeconds.intValue > 59
 
         return !(nameError.value || minutesError.value || secondsError.value)
     }
