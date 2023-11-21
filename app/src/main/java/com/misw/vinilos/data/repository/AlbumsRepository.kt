@@ -69,6 +69,11 @@ class AlbumRepository @Inject constructor(
 
     suspend fun createTrack(albumId: Int, trackCreateRequest: TrackCreateRequest): ApiResponse<Track> {
         val remoteResponse = albumService.createTrack(albumId, trackCreateRequest)
+
+        if (remoteResponse is ApiResponse.Success) {
+            val trackEntities = listOf(TrackEntity(remoteResponse.data.id, remoteResponse.data.name, remoteResponse.data.duration, albumId) )
+            trackDao.insertTracks(trackEntities)
+        }
         return remoteResponse
     }
 }
