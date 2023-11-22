@@ -17,7 +17,10 @@ class ArtistRepository @Inject constructor(
     suspend fun getArtists(): ApiResponse<List<Artist>> {
         val localArtists = artistDao.getAllArtists()
         if (localArtists.isNotEmpty()) {
-            return ApiResponse.Success(localArtists.map { it.toArtist() })
+            val allBirthDatesEmpty = localArtists.all { it.artist.birthDate.isNullOrEmpty() }
+            if (!allBirthDatesEmpty) {
+                return ApiResponse.Success(localArtists.map { it.toArtist() })
+            }
         }
 
         val remoteResponse = artistService.getArtists()
