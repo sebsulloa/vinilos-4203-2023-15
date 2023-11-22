@@ -5,3 +5,9 @@ data class Track(
     val name: String,
     val duration: String
 )
+
+data class TrackForm(
+    val name: String,
+    val minutes: Int,
+    val seconds: Int
+)

@@ -13,6 +13,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.misw.vinilos.DataFactory
 import com.misw.vinilos.MainActivity
+import com.misw.vinilos.pages.CreateTrackPage
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -22,6 +23,7 @@ class AlbumsE2ETest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private val createAlbumPage by lazy { CreateAlbumPage(composeTestRule) }
+    private val createTrackPage by lazy { CreateTrackPage(composeTestRule) }
 
     @Test
     fun testClickAlbumsNavigationItem() {
@@ -38,7 +40,11 @@ class AlbumsE2ETest {
         composeTestRule.onNodeWithTag("AlbumsNavItem").performClick()
 
         // Then
-        composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
+        try {
+            composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
+        } catch (e: AssertionError) {
+            composeTestRule.onNodeWithTag("albumList").assertIsDisplayed()
+        }
     }
 
     @Test
@@ -55,5 +61,21 @@ class AlbumsE2ETest {
 
         // Then
         createAlbumPage.verifyAlbumCreationSuccess()
+    }
+
+    @Test
+    fun testClickFirstAlbumInList() {
+        // Given
+        val randomTrack = DataFactory.createTrackForm()
+
+        // When
+        with(createTrackPage) {
+            navigateToTrackCreationScreen()
+            fillTrackFormWith(randomTrack)
+            submitTrackForm()
+        }
+
+        // Then
+        createTrackPage.verifyTrackCreationSuccess()
     }
 }

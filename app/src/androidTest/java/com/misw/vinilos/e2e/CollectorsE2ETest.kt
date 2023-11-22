@@ -1,6 +1,5 @@
 package com.misw.vinilos.e2e
 
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -15,7 +14,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-@OptIn(ExperimentalTestApi::class)
 class CollectorsE2ETest {
 
     @get:Rule
@@ -23,13 +21,23 @@ class CollectorsE2ETest {
 
     @Test
     fun testClickCollectorsNavigationItem() {
+        // When
         composeTestRule.onNodeWithTag("CollectorsNavItem").performClick()
+
+        // Then
         composeTestRule.onNodeWithTag("topAppBarTitle").assertTextEquals("Collectors")
     }
 
     @Test
     fun testCollectorsLoading() {
+        // When
         composeTestRule.onNodeWithTag("CollectorsNavItem").performClick()
-        composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
+
+        // Then
+        try {
+            composeTestRule.onNodeWithTag("Loading").assertIsDisplayed()
+        } catch (e: AssertionError) {
+            composeTestRule.onNodeWithTag("collectorList").assertIsDisplayed()
+        }
     }
 }

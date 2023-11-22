@@ -1,6 +1,5 @@
 package com.misw.vinilos.viewmodels
 
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +21,8 @@ class TrackCreateViewModel @Inject constructor(
 
     // State variables for inputs
     var trackName = mutableStateOf("")
-    var trackMinutes = mutableIntStateOf(0)
-    var trackSeconds = mutableIntStateOf(0)
+    var trackMinutes = mutableStateOf("")
+    var trackSeconds = mutableStateOf("")
 
     // Error states for each input
     var nameError = mutableStateOf(false)
@@ -46,8 +45,8 @@ class TrackCreateViewModel @Inject constructor(
             viewModelScope.launch {
                 isLoading.value = true
 
-                val formattedMinutes = String.format("%02d", trackMinutes.intValue)
-                val formattedSeconds = String.format("%02d", trackSeconds.intValue)
+                val formattedMinutes = String.format("%02d", Integer.parseInt(trackMinutes.value))
+                val formattedSeconds = String.format("%02d", Integer.parseInt(trackSeconds.value))
 
                 val trackCreateRequest = TrackCreateRequest(
                     name = trackName.value,
@@ -73,8 +72,8 @@ class TrackCreateViewModel @Inject constructor(
 
     fun clearInputs() {
         trackName.value = ""
-        trackMinutes.intValue = 0
-        trackSeconds.intValue = 0
+        trackMinutes.value = ""
+        trackSeconds.value = ""
 
         // Reset error states
         nameError.value = false
@@ -84,9 +83,13 @@ class TrackCreateViewModel @Inject constructor(
 
     private fun validateInputs(): Boolean {
         nameError.value = trackName.value.isBlank()
-        minutesError.value = trackMinutes.intValue < 0 || trackMinutes.intValue > 59
-        secondsError.value = trackSeconds.intValue < 0 || trackSeconds.intValue > 59
+        minutesError.value = !isValidTimeInput(trackMinutes.value)
+        secondsError.value = !isValidTimeInput(trackSeconds.value)
 
         return !(nameError.value || minutesError.value || secondsError.value)
+    }
+
+    private fun isValidTimeInput(input: String): Boolean {
+        return input.toIntOrNull()?.let { it in 0..59 } ?: false
     }
 }

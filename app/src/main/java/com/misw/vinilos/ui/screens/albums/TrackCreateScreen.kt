@@ -37,10 +37,10 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
     val trackName = viewModel.trackName.value
     val nameError = viewModel.nameError.value
 
-    val trackMinutes = viewModel.trackMinutes.intValue
+    val trackMinutes = viewModel.trackMinutes.value
     val minutesError = viewModel.minutesError.value
 
-    val trackSeconds = viewModel.trackSeconds.intValue
+    val trackSeconds = viewModel.trackSeconds.value
     val secondsError = viewModel.secondsError.value
 
     val isLoading = viewModel.isLoading.value
@@ -98,7 +98,7 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
             OutlinedTextField(
                 value = trackMinutes.toString(),
                 onValueChange = {
-                    viewModel.trackMinutes.intValue = it.toIntOrNull() ?: 0
+                    viewModel.trackMinutes.value = it
                     viewModel.minutesError.value = it.isEmpty()
                 },
                 label = { Text("Minutes") },
@@ -122,7 +122,7 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
             OutlinedTextField(
                 value = trackSeconds.toString(),
                 onValueChange = {
-                    viewModel.trackSeconds.intValue = it.toIntOrNull() ?: 0
+                    viewModel.trackSeconds.value = it
                     viewModel.secondsError.value = it.isEmpty()
                 },
                 label = { Text("Seconds") },

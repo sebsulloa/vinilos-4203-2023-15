@@ -77,7 +77,9 @@ fun AlbumsListScreen(viewModel: AlbumsViewModel, navController: NavController) {
 @Composable
 fun AlbumListItem(album: Album, onClick: () -> Unit) {
     ListItem(
-        modifier = Modifier.clickable { onClick() },
+        modifier = Modifier
+            .clickable { onClick() }
+            .testTag("albumListItem-${album.id}"),
         headlineContent = { Text(album.name) },
         supportingContent = { Text(album.genre) },
         leadingContent = {
