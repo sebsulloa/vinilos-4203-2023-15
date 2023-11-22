@@ -56,7 +56,6 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel, navController: NavController)
                     .testTag("errorMessage"))
             )
         }
-
         else -> {
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
