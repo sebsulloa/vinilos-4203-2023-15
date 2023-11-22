@@ -1,5 +1,6 @@
 package com.misw.vinilos.ui.screens.collectors
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,14 +25,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.misw.vinilos.data.remote.models.Collector
+import com.misw.vinilos.navigation.Screen
 import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.CollectorsViewModel
 
 @Composable
-fun CollectorsListScreen(viewModel: CollectorsViewModel) {
+fun CollectorsListScreen(viewModel: CollectorsViewModel, navController: NavController) {
     val collectors = viewModel.collectors.value
     val isLoading = viewModel.isLoading.value
     val hasError = viewModel.hasError.value
@@ -64,6 +67,9 @@ fun CollectorsListScreen(viewModel: CollectorsViewModel) {
                 LazyColumn(modifier = Modifier.testTag("collectorList")) {
                     items(collectors) { collector ->
                         CollectorListItem(collector = collector)
+                        {
+                            navController.navigate(Screen.CollectorDetails.route + "/${collector.id}")
+                        }
                     }
                 }
             }
@@ -72,8 +78,9 @@ fun CollectorsListScreen(viewModel: CollectorsViewModel) {
 }
 
 @Composable
-fun CollectorListItem(collector: Collector) {
+fun CollectorListItem(collector: Collector, onClick: () -> Unit) {
     ListItem(
+        modifier = Modifier.clickable { onClick() },
         headlineContent = { Text(collector.name) },
         supportingContent = { Text(collector.email, fontSize = 14.sp) },
         leadingContent = {

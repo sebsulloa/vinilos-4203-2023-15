@@ -1,9 +1,12 @@
 package com.misw.vinilos.ui
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.navigation.compose.ComposeNavigator
+import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.misw.vinilos.DataFactory
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
@@ -20,6 +23,8 @@ class ArtistsListScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    lateinit var navController: TestNavHostController
+
     @Test
     fun testLoadingState() {
         // Given
@@ -31,7 +36,9 @@ class ArtistsListScreenTest {
         every { mockViewModel.hasError } returns mutableStateOf(false)
 
         composeTestRule.setContent {
-            ArtistsListScreen(viewModel = mockViewModel)
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            ArtistsListScreen(viewModel = mockViewModel, navController = navController)
         }
 
         // Then
@@ -49,9 +56,10 @@ class ArtistsListScreenTest {
         every { mockViewModel.hasError } returns mutableStateOf(true)
 
         composeTestRule.setContent {
-            ArtistsListScreen(viewModel = mockViewModel)
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            ArtistsListScreen(viewModel = mockViewModel, navController = navController)
         }
-
         // Then
         composeTestRule.onNodeWithTag("errorMessage").assertIsDisplayed()
     }
@@ -68,7 +76,9 @@ class ArtistsListScreenTest {
         every { mockViewModel.hasError } returns mutableStateOf(false)
 
         composeTestRule.setContent {
-            ArtistsListScreen(viewModel = mockViewModel)
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            ArtistsListScreen(viewModel = mockViewModel, navController = navController)
         }
 
         // Then

@@ -38,6 +38,7 @@ object DataFactory {
             name = faker.name.name(),
             telephone = faker.phoneNumber.phoneNumber(),
             email = faker.internet.email(),
+            favoritePerformers = emptyList()
         )
     }
 

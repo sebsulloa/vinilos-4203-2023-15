@@ -11,4 +11,8 @@ class ArtistRepository @Inject constructor(
     suspend fun getArtists(): ApiResponse<List<Artist>> {
         return artistService.getArtists()
     }
+
+    suspend fun getArtistDetail(artistId: Int): ApiResponse<Artist> {
+        return artistService.getArtistDetail(artistId)
+    }
 }
