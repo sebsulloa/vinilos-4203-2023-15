@@ -7,7 +7,7 @@ import retrofit2.http.Path
 
 interface CollectorService {
     @GET("/collectors")
-    suspend fun getArtists(): ApiResponse<List<Collector>>
+    suspend fun getCollectors(): ApiResponse<List<Collector>>
 
     @GET("/collectors/{collectorId}")
     suspend fun getCollectorDetail(@Path("collectorId") collectorId: Int): ApiResponse<Collector>
