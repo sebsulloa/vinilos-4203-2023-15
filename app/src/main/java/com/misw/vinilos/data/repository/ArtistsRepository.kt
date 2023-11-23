@@ -91,4 +91,8 @@ class ArtistRepository @Inject constructor(
 
         return remoteResponse
     }
+
+    suspend fun getArtistDetail(artistId: Int): ApiResponse<Artist> {
+        return artistService.getArtistDetail(artistId)
+    }
 }

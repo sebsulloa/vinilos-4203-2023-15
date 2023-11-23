@@ -68,7 +68,7 @@ class CollectorRepository @Inject constructor(
             //  Insert collector
             collectorDao.insertCollector(remoteCollector.toCollectorEntity())
 
-            // Batch insert artists and collector artists
+            // Batch insert artists and collector artists            
             val artistEntities = remoteCollector.favoritePerformers.map {
                 ArtistEntity(
                     it.id,
