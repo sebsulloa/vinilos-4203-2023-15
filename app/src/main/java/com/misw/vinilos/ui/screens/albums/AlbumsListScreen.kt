@@ -85,14 +85,14 @@ fun AlbumListItem(album: Album, onClick: () -> Unit) {
         leadingContent = {
             Image(
                 painter = rememberAsyncImagePainter(model = album.cover),
-                contentDescription = null,
+                contentDescription = "The cover of the album ${album.name}",
                 modifier = Modifier.size(40.dp)
             )
         },
         trailingContent = {
             Icon(
                 imageVector = Icons.Filled.ArrowRight,
-                contentDescription = null
+                contentDescription = "Navigate to details of ${album.name}"
             )
         }
     )

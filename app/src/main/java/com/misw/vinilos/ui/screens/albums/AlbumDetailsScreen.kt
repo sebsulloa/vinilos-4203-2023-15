@@ -50,7 +50,7 @@ fun AlbumDetailsScreen(album: Album, navController: NavController) {
             // Album Image
             Image(
                 painter = rememberAsyncImagePainter(model = album.cover),
-                contentDescription = null,
+                contentDescription = "The cover image of the album titled ${album.name}",
                 modifier = Modifier.size(200.dp)
             )
 
@@ -103,7 +103,7 @@ fun AlbumInfoItem(label: String, value: String, icon: ImageVector) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Icon(imageVector = icon, contentDescription = label + "Icon", modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(text = label, fontWeight = FontWeight.Bold, fontSize = 16.sp)
@@ -151,7 +151,7 @@ fun AlbumTrackItem(track: Track) {
         supportingContent = { Text(track.duration, fontSize = 14.sp) },
         leadingContent = {
             Icon(
-                imageVector = Icons.Filled.PlayArrow, contentDescription = null
+                imageVector = Icons.Filled.PlayArrow, contentDescription = "Track Icon"
             )
         }
     )

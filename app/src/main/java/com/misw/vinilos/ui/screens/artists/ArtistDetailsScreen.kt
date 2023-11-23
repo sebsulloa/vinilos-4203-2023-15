@@ -100,7 +100,7 @@ fun ArtistDetails(artistDetails: Artist, navController: NavController) {
             // Artist Image
             Image(
                 painter = rememberAsyncImagePainter(model = artistDetails.image),
-                contentDescription = null,
+                contentDescription = "The image of the artist",
                 modifier = Modifier.size(200.dp)
             )
 
@@ -161,7 +161,7 @@ fun ArtistInfoItem(label: String, value: String, icon: ImageVector) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Icon(imageVector = icon, contentDescription = "Artist Icon", modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(text = label, fontWeight = FontWeight.Bold, fontSize = 16.sp)
