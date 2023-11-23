@@ -12,11 +12,6 @@ import com.misw.vinilos.pages.CreateAlbumPage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
-import com.misw.vinilos.DataFactory
-import com.misw.vinilos.MainActivity
 import com.misw.vinilos.pages.CreateTrackPage
 
 @RunWith(AndroidJUnit4::class)
