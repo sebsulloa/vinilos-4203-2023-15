@@ -3,6 +3,7 @@ package com.misw.vinilos
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.Artist
 import com.misw.vinilos.data.remote.models.Collector
+import com.misw.vinilos.data.remote.models.TrackForm
 import io.github.serpro69.kfaker.Faker
 import java.time.format.DateTimeFormatter
 
@@ -56,6 +57,14 @@ object DataFactory {
             recordLabel = recordLabels.random(),
             tracks = emptyList(),
             performers = emptyList()
+        )
+    }
+
+    fun createTrackForm(): TrackForm {
+        return TrackForm(
+            name = faker.music.albums(),
+            minutes = faker.random.nextInt(0, 60),
+            seconds = faker.random.nextInt(0, 60)
         )
     }
 }

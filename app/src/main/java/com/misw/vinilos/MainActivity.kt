@@ -9,6 +9,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Album
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -38,6 +43,7 @@ import com.misw.vinilos.ui.components.BottomNavigationItem
 import com.misw.vinilos.ui.screens.albums.AlbumCreateScreen
 import com.misw.vinilos.ui.screens.albums.AlbumDetailsScreen
 import com.misw.vinilos.ui.screens.albums.AlbumsListScreen
+import com.misw.vinilos.ui.screens.albums.TrackCreateScreen
 import com.misw.vinilos.ui.screens.artists.ArtistDetailsScreen
 import com.misw.vinilos.ui.screens.artists.ArtistsListScreen
 import com.misw.vinilos.ui.screens.collectors.CollectorDetailsScreen
@@ -47,6 +53,7 @@ import com.misw.vinilos.viewmodels.AlbumCreateViewModel
 import com.misw.vinilos.viewmodels.AlbumsViewModel
 import com.misw.vinilos.viewmodels.ArtistDetailsViewModel
 import com.misw.vinilos.viewmodels.ArtistsViewModel
+import com.misw.vinilos.viewmodels.TrackCreateViewModel
 import com.misw.vinilos.viewmodels.CollectorDetailsViewModel
 import com.misw.vinilos.viewmodels.CollectorsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,10 +73,9 @@ class MainActivity : ComponentActivity() {
 
             val albumsViewModel: AlbumsViewModel by viewModels()
             val createAlbumViewModel: AlbumCreateViewModel by viewModels()
-
+            val createTrackViewModel: TrackCreateViewModel by viewModels()
             val artistsViewModel: ArtistsViewModel by viewModels()
             val artistDetailsViewModel: ArtistDetailsViewModel by viewModels()
-
             val collectorsViewModel: CollectorsViewModel by viewModels()
             val collectorDetailsViewModel: CollectorDetailsViewModel by viewModels()
 
@@ -77,7 +83,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         if (currentDestination?.route == Screen.CreateAlbum.route
-                            || currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true
                             || currentDestination?.route?.startsWith(Screen.ArtistDetails.route) == true
                             || currentDestination?.route?.startsWith(Screen.CollectorDetails.route) == true){
                             TopAppBar(
@@ -127,7 +132,79 @@ class MainActivity : ComponentActivity() {
                                     navigationIconContentColor = Color.White
                                 )
                             )
-                        } else {
+                        }
+                        else if (currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true){
+                            TopAppBar(
+                                actions = {
+                                    val albumId = navBackStackEntry?.arguments?.getInt("albumId") ?: -1
+                                    if (albumId != -1) {
+                                        IconButton(onClick = {
+                                            navController.navigate("album/$albumId/tracks")
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Album,
+                                                contentDescription = "Create Track"
+                                            )
+                                        }
+                                    }
+                                },
+                                navigationIcon = {
+                                    IconButton(onClick = { navController.navigateUp() }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                },
+                                title = {
+                                    Text(
+                                        modifier = Modifier.testTag("topAppBarTitle"),
+                                        text = currentDestination?.let { destination ->
+                                            when {
+                                                destination.route == Screen.CreateAlbum.route -> Screen.CreateAlbum.title()
+                                                destination.route?.startsWith(Screen.AlbumDetails.route) == true -> {
+                                                    val albumId = navBackStackEntry?.arguments?.getInt("albumId")?: -1
+                                                    val selectedAlbum = albumsViewModel.albums.value.find { it.id == albumId }
+                                                    selectedAlbum?.name ?: ""
+                                                }
+                                                else -> ""
+                                            }
+                                        } ?: ""
+                                    )
+                                },
+                                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    titleContentColor = Color.White,
+                                    navigationIconContentColor = Color.White,
+                                    actionIconContentColor = Color.White
+                                )
+                            )
+                        }
+                        else if (currentDestination?.route?.startsWith(Screen.CreateTrack.route) == true){
+                            TopAppBar(
+                                navigationIcon = {
+                                    IconButton(onClick = { navController.navigateUp() }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                },
+                                title = {
+                                    Text(
+                                        modifier = Modifier.testTag("topAppBarTitle"),
+                                        text = "Create track"
+                                    )
+                                },
+                                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    titleContentColor = Color.White,
+                                    navigationIconContentColor = Color.White,
+                                    actionIconContentColor = Color.White
+                                )
+                            )
+                        }
+                        else {
                             TopAppBar(
                                 title = {
                                     Text(modifier = Modifier.testTag("topAppBarTitle"),
@@ -206,6 +283,13 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 // Handle error, album not found
                             }
+                        }
+                        composable(
+                            route = Screen.CreateTrack.route,
+                            arguments = listOf(navArgument("albumId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val arguments = requireNotNull(backStackEntry.arguments)
+                            TrackCreateScreen(createTrackViewModel, arguments.getInt("albumId"))
                         }
 
                         //artists

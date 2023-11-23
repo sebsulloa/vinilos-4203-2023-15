@@ -12,6 +12,7 @@ import com.misw.vinilos.pages.CreateAlbumPage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import com.misw.vinilos.pages.CreateTrackPage
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -21,6 +22,7 @@ class AlbumsE2ETest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private val createAlbumPage by lazy { CreateAlbumPage(composeTestRule) }
+    private val createTrackPage by lazy { CreateTrackPage(composeTestRule) }
 
     @Test
     fun testClickAlbumsNavigationItem() {
@@ -45,5 +47,21 @@ class AlbumsE2ETest {
 
         // Then
         createAlbumPage.verifyAlbumCreationSuccess()
+    }
+
+    @Test
+    fun testClickFirstAlbumInList() {
+        // Given
+        val randomTrack = DataFactory.createTrackForm()
+
+        // When
+        with(createTrackPage) {
+            navigateToTrackCreationScreen()
+            fillTrackFormWith(randomTrack)
+            submitTrackForm()
+        }
+
+        // Then
+        createTrackPage.verifyTrackCreationSuccess()
     }
 }
