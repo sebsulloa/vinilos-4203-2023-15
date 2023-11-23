@@ -31,8 +31,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideArtistRepository(artistService: ArtistService): ArtistRepository {
-        return ArtistRepository(artistService)
+    fun provideArtistRepository(artistService: ArtistService, artistDao: ArtistDao, albumDao: AlbumDao): ArtistRepository {
+        return ArtistRepository(artistService, artistDao, albumDao)
     }
 
     @Provides
