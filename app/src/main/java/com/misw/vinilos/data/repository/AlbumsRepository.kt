@@ -44,7 +44,7 @@ class AlbumRepository @Inject constructor(
 
             // Batch insert artists and album artists
             val artistEntities = remoteAlbums.flatMap { album ->
-                album.performers.map { ArtistEntity(it.id, it.name, it.image, it.description, it.birthDate) }
+                album.performers.map { ArtistEntity(it.id, it.name, it.image, "", "") }
             }
             val albumArtistCrossRefs = remoteAlbums.flatMap { album ->
                 album.performers.map { AlbumArtistCrossRef(album.id, it.id) }

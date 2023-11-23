@@ -7,4 +7,6 @@
     <string name="create_album">Create album</string>
     <string name="album_details">Album Details</string>
     <string name="create_track">Create track</string>
+    <string name="artist_details">Artist Details</string>
+    <string name="collector_details">Collector Details</string>
 </resources>

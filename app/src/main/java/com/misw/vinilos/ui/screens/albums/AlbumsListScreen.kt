@@ -94,6 +94,6 @@ fun AlbumListItem(album: Album, onClick: () -> Unit) {
                 imageVector = Icons.Filled.ArrowRight,
                 contentDescription = null
             )
-        },
+        }
     )
 }

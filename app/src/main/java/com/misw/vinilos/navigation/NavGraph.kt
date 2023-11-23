@@ -17,7 +17,9 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     object AlbumDetails: Screen("album_details", Icons.Filled.Album, R.string.album_details)
     object CreateTrack : Screen("album/{albumId}/tracks", Icons.Filled.AddBox, R.string.create_track)
     object Artists : Screen("artists", Icons.Filled.Mic ,R.string.tab_artists)
+    object ArtistDetails: Screen("artist_details", Icons.Filled.Mic, R.string.artist_details)
     object Collectors : Screen("collectors", Icons.Filled.Person ,R.string.tab_collectors)
+    object CollectorDetails: Screen("collector_details", Icons.Filled.Mic, R.string.collector_details)
 }
 
 
