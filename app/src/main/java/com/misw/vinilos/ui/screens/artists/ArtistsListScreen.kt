@@ -88,14 +88,14 @@ fun ArtistListItem(artist: Artist, onClick: () -> Unit) {
         leadingContent = {
             Image(
                 painter = rememberAsyncImagePainter(model = artist.image),
-                contentDescription = null,
+                contentDescription = "Profile picture of ${artist.name}",
                 modifier = Modifier.size(40.dp)
             )
         },
         trailingContent = {
             Icon(
                 imageVector = Icons.Filled.ArrowRight,
-                contentDescription = null
+                contentDescription = "Navigate to details of ${artist.name}"
             )
         }
     )

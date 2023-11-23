@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.misw.vinilos.viewmodels.TrackCreateViewModel
@@ -151,7 +153,10 @@ fun TrackCreateScreen(viewModel: TrackCreateViewModel, albumId: Int?) {
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .testTag("TrackSubmitField"),
+                    .testTag("TrackSubmitField")
+                    .semantics {
+                        contentDescription = "Create Track Button"
+                    },
                 enabled = !viewModel.isLoading.value,
                 colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)

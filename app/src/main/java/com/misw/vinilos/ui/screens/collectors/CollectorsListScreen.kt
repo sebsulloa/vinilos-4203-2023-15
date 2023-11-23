@@ -104,7 +104,7 @@ fun CollectorListItem(collector: Collector, onClick: () -> Unit) {
         trailingContent = {
             Icon(
                 imageVector = Icons.Filled.ArrowRight,
-                contentDescription = null
+                contentDescription = "Navigate to details of ${collector.name}"
             )
         }
     )

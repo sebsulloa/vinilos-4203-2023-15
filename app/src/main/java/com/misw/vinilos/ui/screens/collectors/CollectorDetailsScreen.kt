@@ -127,7 +127,7 @@ fun CollectorInfoItem(label: String, value: String, icon: ImageVector) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Icon(imageVector = icon, contentDescription = "$label Icon", modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(text = label, fontWeight = FontWeight.Bold, fontSize = 16.sp)
