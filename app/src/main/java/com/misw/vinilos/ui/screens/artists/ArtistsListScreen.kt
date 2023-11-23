@@ -1,6 +1,7 @@
 package com.misw.vinilos.ui.screens.artists
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,15 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.misw.vinilos.data.remote.models.Artist
+import com.misw.vinilos.navigation.Screen
 import com.misw.vinilos.ui.components.ErrorMessage
 import com.misw.vinilos.viewmodels.ArtistsViewModel
 
 @Composable
-fun ArtistsListScreen(viewModel: ArtistsViewModel) {
+fun ArtistsListScreen(viewModel: ArtistsViewModel, navController: NavController) {
     val artists = viewModel.artists.value
     val isLoading = viewModel.isLoading.value
     val hasError = viewModel.hasError.value
@@ -45,11 +48,15 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
                 CircularProgressIndicator(modifier = Modifier.testTag("Loading"))
             }
         }
+
         hasError -> {
             ErrorMessage(
-                modifier = (Modifier.fillMaxSize().testTag("errorMessage"))
+                modifier = (Modifier
+                    .fillMaxSize()
+                    .testTag("errorMessage"))
             )
         }
+
         else -> {
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
@@ -62,6 +69,9 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
                 LazyColumn(modifier = Modifier.testTag("artistList")) {
                     items(artists) { artist ->
                         ArtistListItem(artist = artist)
+                        {
+                            navController.navigate(Screen.ArtistDetails.route + "/${artist.id}")
+                        }
                     }
                 }
             }
@@ -71,20 +81,21 @@ fun ArtistsListScreen(viewModel: ArtistsViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArtistListItem(artist: Artist) {
+fun ArtistListItem(artist: Artist, onClick: () -> Unit) {
     ListItem(
+        modifier = Modifier.clickable { onClick() },
         headlineContent = { Text(artist.name) },
         leadingContent = {
             Image(
                 painter = rememberAsyncImagePainter(model = artist.image),
-                contentDescription = null,
+                contentDescription = "Profile picture of ${artist.name}",
                 modifier = Modifier.size(40.dp)
             )
         },
         trailingContent = {
             Icon(
                 imageVector = Icons.Filled.ArrowRight,
-                contentDescription = null
+                contentDescription = "Navigate to details of ${artist.name}"
             )
         }
     )

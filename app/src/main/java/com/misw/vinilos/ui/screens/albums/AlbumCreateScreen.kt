@@ -28,6 +28,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.misw.vinilos.ui.components.DateSelectionDialog
 import com.misw.vinilos.ui.components.DropdownSelector
@@ -229,16 +231,19 @@ fun AlbumCreateScreen(viewModel: AlbumCreateViewModel) {
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .testTag("AlbumSubmitField"),
+                    .testTag("AlbumSubmitField")
+                    .semantics { // Use semantics to provide contentDescription
+                        contentDescription = "Create Album Button"
+                    },
                 enabled = !viewModel.isLoading.value,
                 colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
                 )
-            ) {
+            ){
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 } else {
                     Text("Create Album")

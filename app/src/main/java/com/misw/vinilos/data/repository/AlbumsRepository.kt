@@ -8,6 +8,8 @@ import com.misw.vinilos.data.local.entities.ArtistEntity
 import com.misw.vinilos.data.local.entities.TrackEntity
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.AlbumCreateRequest
+import com.misw.vinilos.data.remote.models.Track
+import com.misw.vinilos.data.remote.models.TrackCreateRequest
 import com.misw.vinilos.data.remote.services.AlbumService
 import com.skydoves.sandwich.ApiResponse
 import javax.inject.Inject
@@ -42,7 +44,7 @@ class AlbumRepository @Inject constructor(
 
             // Batch insert artists and album artists
             val artistEntities = remoteAlbums.flatMap { album ->
-                album.performers.map { ArtistEntity(it.id, it.name, it.image, it.description, it.birthDate) }
+                album.performers.map { ArtistEntity(it.id, it.name, it.image, "", "") }
             }
             val albumArtistCrossRefs = remoteAlbums.flatMap { album ->
                 album.performers.map { AlbumArtistCrossRef(album.id, it.id) }
@@ -62,6 +64,16 @@ class AlbumRepository @Inject constructor(
             albumDao.insertAlbum(remoteResponse.data.toAlbumEntity())
         }
 
+        return remoteResponse
+    }
+
+    suspend fun createTrack(albumId: Int, trackCreateRequest: TrackCreateRequest): ApiResponse<Track> {
+        val remoteResponse = albumService.createTrack(albumId, trackCreateRequest)
+
+        if (remoteResponse is ApiResponse.Success) {
+            val trackEntities = listOf(TrackEntity(remoteResponse.data.id, remoteResponse.data.name, remoteResponse.data.duration, albumId) )
+            trackDao.insertTracks(trackEntities)
+        }
         return remoteResponse
     }
 }

@@ -77,21 +77,23 @@ fun AlbumsListScreen(viewModel: AlbumsViewModel, navController: NavController) {
 @Composable
 fun AlbumListItem(album: Album, onClick: () -> Unit) {
     ListItem(
-        modifier = Modifier.clickable { onClick() },
+        modifier = Modifier
+            .clickable { onClick() }
+            .testTag("albumListItem-${album.id}"),
         headlineContent = { Text(album.name) },
         supportingContent = { Text(album.genre) },
         leadingContent = {
             Image(
                 painter = rememberAsyncImagePainter(model = album.cover),
-                contentDescription = null,
+                contentDescription = "The cover of the album ${album.name}",
                 modifier = Modifier.size(40.dp)
             )
         },
         trailingContent = {
             Icon(
                 imageVector = Icons.Filled.ArrowRight,
-                contentDescription = null
+                contentDescription = "Navigate to details of ${album.name}"
             )
-        },
+        }
     )
 }

@@ -1,6 +1,5 @@
 package com.misw.vinilos.ui.screens.albums
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,17 +28,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.misw.vinilos.data.remote.models.Album
 import com.misw.vinilos.data.remote.models.Artist
 import com.misw.vinilos.data.remote.models.Track
+import com.misw.vinilos.navigation.Screen
 import com.misw.vinilos.ui.screens.artists.ArtistListItem
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.misw.vinilos.utils.formatDateFromString
 
 @Composable
-fun AlbumDetailsScreen(album: Album) {
+fun AlbumDetailsScreen(album: Album, navController: NavController) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -51,7 +50,7 @@ fun AlbumDetailsScreen(album: Album) {
             // Album Image
             Image(
                 painter = rememberAsyncImagePainter(model = album.cover),
-                contentDescription = null,
+                contentDescription = "The cover image of the album titled ${album.name}",
                 modifier = Modifier.size(200.dp)
             )
 
@@ -73,7 +72,7 @@ fun AlbumDetailsScreen(album: Album) {
         }
 
         item {
-            AlbumArtistsList(performers = album.performers)
+            AlbumArtistsList(performers = album.performers, navController =  navController)
         }
     }
 }
@@ -85,7 +84,7 @@ fun AlbumInfoSection(album: Album) {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        AlbumInfoItem(label = "Release Date", value = formatDate(album.releaseDate), icon = Icons.Default.Event)
+        AlbumInfoItem(label = "Release Date", value = formatDateFromString(album.releaseDate), icon = Icons.Default.Event)
         AlbumInfoItem(label = "Description", value = album.description, icon = Icons.Default.Info)
         AlbumInfoItem(label = "Genre", value = album.genre, icon = Icons.Default.MusicNote)
         AlbumInfoItem(
@@ -104,7 +103,7 @@ fun AlbumInfoItem(label: String, value: String, icon: ImageVector) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Icon(imageVector = icon, contentDescription = label + "Icon", modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(text = label, fontWeight = FontWeight.Bold, fontSize = 16.sp)
@@ -152,14 +151,14 @@ fun AlbumTrackItem(track: Track) {
         supportingContent = { Text(track.duration, fontSize = 14.sp) },
         leadingContent = {
             Icon(
-                imageVector = Icons.Filled.PlayArrow, contentDescription = null
+                imageVector = Icons.Filled.PlayArrow, contentDescription = "Track Icon"
             )
         }
     )
 }
 
 @Composable
-fun AlbumArtistsList(performers: List<Artist>) {
+fun AlbumArtistsList(performers: List<Artist>, navController: NavController) {
     var height = 50.dp
     val trackCount = performers.size
     if (trackCount >= 4) {
@@ -173,22 +172,9 @@ fun AlbumArtistsList(performers: List<Artist>) {
     ) {
         items(performers) { artist ->
             ArtistListItem(artist = artist)
+            {
+                navController.navigate(Screen.ArtistDetails.route + "/${artist.id}")
+            }
         }
     }
-}
-
-fun formatDate(dateString: String): String {
-    val inputFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-    val outputFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-    try {
-        val date = inputFormatter.parse(dateString)
-        if (date != null) {
-            return outputFormatter.format(date)
-        }
-    } catch (e: ParseException) {
-        Log.d("Parsing date error", e.message+"")
-    }
-
-    return dateString
 }
