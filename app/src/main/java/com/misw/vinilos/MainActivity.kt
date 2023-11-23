@@ -83,7 +83,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         if (currentDestination?.route == Screen.CreateAlbum.route
-                            || currentDestination?.route?.startsWith(Screen.AlbumDetails.route) == true
                             || currentDestination?.route?.startsWith(Screen.ArtistDetails.route) == true
                             || currentDestination?.route?.startsWith(Screen.CollectorDetails.route) == true){
                             TopAppBar(
@@ -181,7 +180,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             )
                         }
-                        else if (currentDestination?.route == Screen.CreateTrack.route){
+                        else if (currentDestination?.route?.startsWith(Screen.CreateTrack.route) == true){
                             TopAppBar(
                                 navigationIcon = {
                                     IconButton(onClick = { navController.navigateUp() }) {
