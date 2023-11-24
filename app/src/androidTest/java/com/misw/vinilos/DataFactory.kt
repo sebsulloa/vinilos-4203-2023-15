@@ -67,21 +67,4 @@ object DataFactory {
             seconds = faker.random.nextInt(0, 60)
         )
     }
-
-    fun createAlbumForm(): Album {
-        val recordLabels = listOf("Sony Music", "EMI", "Discos Fuentes", "Elektra", "Fania Records")
-        val genres = listOf("Classical", "Salsa", "Rock", "Folk")
-
-        return Album(
-            id = faker.random.nextInt(intRange = 0..1000),
-            name = faker.music.albums(),
-            cover = "https://source.unsplash.com/random/300x300/?music",
-            releaseDate = faker.random.randomString(length = 15),
-            description = faker.random.randomString(length = 15),
-            genre = genres.random(),
-            recordLabel = recordLabels.random(),
-            tracks = emptyList(),
-            performers = emptyList()
-        )
-    }
 }
